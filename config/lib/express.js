@@ -9,7 +9,6 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 
 //routes
-
 var indexRoute = require('../../routes/index.routes');
 
 
@@ -29,14 +28,7 @@ function initMiddleWares(app) {
 }
 
 
-function checkDb() {
-  
-  dbfunc.connectionCheck.then((data) =>{
-  }).catch((err) => {
-   console.log(err);
- });
 
-}
 
 
 function initRoutes(app){

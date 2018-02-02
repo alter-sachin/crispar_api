@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize');
 const config = require('../config');
-
+const path = require('path');
+const _ = require('lodash');
 
 
 const sequelize = new Sequelize(config.db.database, config.db.user, config.db.password, {
@@ -8,6 +9,7 @@ const sequelize = new Sequelize(config.db.database, config.db.user, config.db.pa
 	dialect: 'mysql',
 
 	logging:true,
+
 	pool: {
 		max: 5,
 		min: 0,
@@ -34,13 +36,42 @@ function connectionCheck() {
 	});
 }
 
+/*call assoiciate function of models */
+function initAssoiciateFunctions(models){
+	_.each(models , function(model){
+		if(model.associate){
+			console.log('a');
+			model.associate(models);
+		}
+	})
+}
+
+
+/*init all the models*/
+function initModels(){
+	
+	var models = {};
+	models.Dish = sequelize.import(path.join(__dirname,'../../models/dish.model'));
+	models.Ingredient = sequelize.import(path.join(__dirname,'/../../models/ingredient.model'));
+	models.Order = sequelize.import(path.join(__dirname,'../../models/order.model'));
+	models.OrderItem = sequelize.import(path.join(__dirname,'../../models/orderItem.model'));
+	models.Restaurant = sequelize.import(path.join(__dirname,'../../models/restaurant.model'));
+	models.User = sequelize.import(path.join(__dirname,'../../models/user.model'));
+
+	initAssoiciateFunctions(models);
+	return models;
+
+
+}
+
 
 
 module.exports = {
 	sequelize : sequelize,
 	utils:{
 		connectionCheck : connectionCheck
-	}
+	},
+	models : initModels()
 }
 
 

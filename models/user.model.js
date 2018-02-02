@@ -2,27 +2,26 @@
 
 module.exports = function(sequelize , DataTypes){
 
-	const Dish = sequelize.define('dish', {
+	const User = sequelize.define('user', {
 
 		id : {
-			type : DataTypes.UUID
+			type : DataTypes.UUID,
+			primaryKey : true
 		},
 		name : {
 			type: DataTypes.STRING,
 			allowNull : false
 		},
-		description: {
-			type: DataTypes.TEXT,
-		},
-		category : {
+		facebookID : {
 			type : DataTypes.STRING
 		},
-		price : {
-			type : DataTypes.FLOAT
-		},
-		modelLocation : {
+		address : {
 			type : DataTypes.STRING
-		},
+		}
 
+	},{
+		tableName: 'cibo_users'
 	});
+
+	return User;
 }
