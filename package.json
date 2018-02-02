@@ -1,0 +1,27 @@
+{
+  "name": "node-mysql-api-server",
+  "version": "0.0.1",
+  "description": "A node server for app.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "node",
+    "mysql"
+  ],
+  "author": "Harish and Sachin",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "chalk": "^2.3.0",
+    "cookie-parser": "^1.4.3",
+    "cors": "^2.8.4",
+    "express": "^4.16.2",
+    "glob": "^7.1.2",
+    "lodash": "^4.17.4",
+    "morgan": "^1.9.0",
+    "mysql2": "^1.5.1",
+    "sequelize": "^4.32.3"
+  }
+}
