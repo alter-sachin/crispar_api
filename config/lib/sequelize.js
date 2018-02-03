@@ -15,6 +15,9 @@ const sequelize = new Sequelize(config.db.database, config.db.user, config.db.pa
 		min: 0,
 		acquire: 30000,
 		idle: 10000
+	},
+	define: {
+    	underscored: false
 	}
 
 });
@@ -40,7 +43,6 @@ function connectionCheck() {
 function initAssoiciateFunctions(models){
 	_.each(models , function(model){
 		if(model.associate){
-			console.log('a');
 			model.associate(models);
 		}
 	})

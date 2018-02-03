@@ -18,8 +18,8 @@ module.exports = function(sequelize , DataTypes){
 	});
 
 	Ingredient.associate =  function(models){
-		Ingredient.belongsToMany(models.Dish , { through: 'IngredientDishMap'});
-		models.Dish.belongsToMany(Ingredient , { through: 'IngredientDishMap'});
+		// Ingredient.belongsToMany(models.Dish , { through: 'IngredientDishMap'});
+		// models.Dish.belongsToMany(Ingredient , { through: 'IngredientDishMap'});
 	}
 
 	return Ingredient;

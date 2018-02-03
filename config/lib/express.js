@@ -10,6 +10,7 @@ var cookieParser = require('cookie-parser');
 
 //routes
 var indexRoute = require('../../routes/index.routes');
+var restaurantRoute = require('../../routes/restaurant.routes');
 
 
 
@@ -33,6 +34,7 @@ function initMiddleWares(app) {
 
 function initRoutes(app){
   indexRoute(app);
+  restaurantRoute(app);
 
 }
 

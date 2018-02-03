@@ -14,9 +14,18 @@ module.exports = function(sequelize , DataTypes){
 		},
 		address: {
 			type: DataTypes.TEXT,
+			allowNull : false
 		},
 		phoneNumbers : {
 			type : DataTypes.TEXT
+		},
+		latitude : {
+			type : DataTypes.FLOAT,
+			allowNull : false
+		},
+		longitude : {
+			type : DataTypes.FLOAT,
+			allowNull : false
 		}
 
 	});
