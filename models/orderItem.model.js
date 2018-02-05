@@ -12,6 +12,7 @@ module.exports = function(sequelize , DataTypes){
 
 	OrderItem.associate = function(models){
 		OrderItem.belongsTo(models.Dish);
+		OrderItem.belongsTo(models.Order);
 	}
 
 	return OrderItem;

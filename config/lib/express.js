@@ -11,11 +11,13 @@ var cookieParser = require('cookie-parser');
 //routes
 var indexRoute = require('../../routes/index.routes');
 var restaurantRoute = require('../../routes/restaurant.routes');
+var userRoute = require('../../routes/user.routes');
+var dishRoutes = require('../../routes/dish.routes');
 
 
 
 function initMiddleWares(app) {
-  
+
   //init cors request
   app.use(cors());
 
@@ -26,6 +28,18 @@ function initMiddleWares(app) {
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(cookieParser());
 
+  app.use((err, req, res, next) => {
+    if (err) {
+      console.log('Invalid Request data');
+      res.json({
+        status : 1,
+        message : 'Invalid Request data'
+      });
+    } else {
+      next();
+    }
+  });
+
 }
 
 
@@ -35,13 +49,14 @@ function initMiddleWares(app) {
 function initRoutes(app){
   indexRoute(app);
   restaurantRoute(app);
-
+  userRoute(app);
+  dishRoutes(app);
 }
 
 
 
 module.exports.init = function() {
- 
+
  var app = express();
 
  //checkDb();

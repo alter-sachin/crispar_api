@@ -23,5 +23,9 @@ module.exports = function(sequelize , DataTypes){
 		tableName: 'cibo_users'
 	});
 
+	User.associate = function(models){
+		User.hasMany(models.Order);
+	}
+
 	return User;
 }

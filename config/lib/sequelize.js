@@ -59,6 +59,8 @@ function initModels(){
 	models.OrderItem = sequelize.import(path.join(__dirname,'../../models/orderItem.model'));
 	models.Restaurant = sequelize.import(path.join(__dirname,'../../models/restaurant.model'));
 	models.User = sequelize.import(path.join(__dirname,'../../models/user.model'));
+	models.Flavour = sequelize.import(path.join(__dirname,'../../models/flavour.model'));
+	models.Process = sequelize.import(path.join(__dirname,'../../models/process.model'));
 
 	initAssoiciateFunctions(models);
 	return models;

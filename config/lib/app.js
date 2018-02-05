@@ -2,11 +2,13 @@
 var express = require('./express');
 var config = require('../config');
 var sequelizeDB = require('./sequelize');
+var sequelize = sequelizeDB.sequelize;
 
 
 module.exports.start = function() {
 	
-	sequelizeDB.sequelize.sync().then(function(){
+	//sequelize.drop();
+	sequelize.sync().then(function(){
 
 		var User = sequelizeDB.models.User;
 
@@ -23,7 +25,7 @@ module.exports.start = function() {
 		});
 	}).catch(function(err){
 		console.log(err);
-	})
+	});
 
 	
 

@@ -1,30 +1,28 @@
 'use strict';
 const db = require('../config/lib/sequelize');
 const sequelize = db.sequelize;
-const Restaurant = db.models.Restaurant;
+const User = db.models.User;
 
 
 /*get model instance from db*/
-function findRestaurantByID(id){
+function findUserByID(id){
 	return new Promise(function(resolve , reject ){
-		Restaurant.findById(id).then(function(restaurant){
-			if(!restaurant){
-				return reject(new Error('No restaurant found for id'));
+		User.findById(id).then(function(user){
+			if(!user){
+				return reject(new Error('No user found for id'));
 			}
-			resolve(restaurant);
+			resolve(user);
 		}).catch(function(err){
 			reject(err);
 		});
 	});
 }
 
-/*add new restaurant row*/
-exports.addNew = function(restaurantObj) {
+/*add new user row*/
+exports.addNew = function(userObj) {
 	return new Promise(function(resolve,reject){
-		Restaurant.create(restaurantObj).then(function(restaurant){
-			resolve(restaurant.get({
-				plain : true
-			}));
+		User.create(userObj).then(function(user){
+			resolve(user);
 		}).catch(function(err){
 			reject(err);
 		});
@@ -37,8 +35,8 @@ exports.getByID = function(id){
  
 	return new Promise(function(resolve,reject){
 		
-		findRestaurantByID(id).then(function(restaurant){
-			resolve(restaurant);
+		findUserByID(id).then(function(user){
+			resolve(user);
 		}).catch(function(err){
 			reject(err);	
 		});
@@ -51,12 +49,12 @@ exports.deleteByID = function(id){
 
 	return new Promise(function(resolve,reject){
 
-		findRestaurantByID(id).then(function(restaurant){
+		findUserByID(id).then(function(user){
 
-			return restaurant.destroy();
+			return user.destroy();
 
-		}).then(function(restaurant){
-			resolve(restaurant);
+		}).then(function(user){
+			resolve(user);
 		}).catch(function(err){
 			reject(err);	
 		});
@@ -68,22 +66,20 @@ exports.update = function(id , updateObj){
 
 	return new Promise(function(resolve,reject){
 		
-		findRestaurantByID(id).then(function(restaurant){
-			return restaurant.update(updateObj);
-		}).then(function(restaurant){
-			resolve(restaurant);
+		findUserByID(id).then(function(user){
+			return user.update(updateObj);
+		}).then(function(user){
+			resolve(user);
 		}).catch(function(err){
 			reject(err);	
 		});
 	});
-
-
 }
 
 
 exports.getList = function(){
 	return new Promise(function(resolve,reject){
-		Restaurant.all().then(function(restaurants){
+		User.all().then(function(restaurants){
 			resolve(restaurants)
 		}).catch(function(err){
 			reject(err);

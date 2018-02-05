@@ -28,7 +28,10 @@ module.exports = function(sequelize , DataTypes){
 	});
 
 	Dish.associate = function(models){
-		Dish.hasMany(models.Ingredient);
+		// Dish.hasMany(models.Ingredient);
+		Dish.hasMany(models.Process);
+		Dish.hasMany(models.Flavour);
+		Dish.belongsTo(models.Restaurant);
 	}
 
 	return Dish;

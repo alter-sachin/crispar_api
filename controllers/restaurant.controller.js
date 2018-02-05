@@ -103,3 +103,24 @@ exports.updateRestaurant = function(req , res){
 		});
 	});
 }
+
+
+exports.getRestaurantsList = function(req , res){
+
+	restaurantDB.getList().then(function(restaurants){
+		
+		_.each(restaurants , function(restaurant){ 
+			parsePhoneNumberString(restaurant);
+		});
+
+		res.json({
+			status : 0,
+			restaurants : restaurants
+		});
+	}).catch(function(err){
+		res.status(422).json({
+			status : 1,
+			message : errorHandler.getErrorMessage(err)
+		});
+	});
+}
