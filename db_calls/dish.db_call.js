@@ -2,12 +2,17 @@
 const db = require('../config/lib/sequelize');
 const sequelize = db.sequelize;
 const Dish = db.models.Dish;
+const Process = db.models.Process;
+const Ingredient = db.models.Ingredient;
+const Flavour = db.models.Flavour;
 
 
 /*get model instance from db*/
 function findDishByID(id){
 	return new Promise(function(resolve , reject ){
-		Dish.findById(id).then(function(dish){
+		Dish.findById(id,{
+			include : [Process , Ingredient , Flavour]
+		}).then(function(dish){
 			if(!dish){
 				return reject(new Error('No dish found for id'));
 			}
@@ -81,8 +86,10 @@ exports.update = function(id , updateObj){
 
 exports.getList = function(){
 	return new Promise(function(resolve,reject){
-		Dish.all().then(function(dishs){
-			resolve(dishs)
+		Dish.all({
+			include : [Process,Flavour,Ingredient]
+		}).then(function(dishes){
+			resolve(dishes)
 		}).catch(function(err){
 			reject(err);
 		});

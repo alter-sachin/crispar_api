@@ -20,7 +20,7 @@ module.exports = function(sequelize , DataTypes){
 	Process.associate =  function(models){
 		// Process.belongsToMany(models.Dish , { through: 'ProcessDishMap'});
 		// models.Dish.belongsToMany(Process , { through: 'ProcessDishMap'});
-		Process.belongsTo(models.Dish);
+		Process.belongsTo(models.Dish , {onDelete : 'CASCADE'} );
 	}
 
 	return Process;

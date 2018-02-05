@@ -14,23 +14,27 @@ module.exports = function(sequelize , DataTypes){
 		},
 		description: {
 			type: DataTypes.TEXT,
+			allowNull : false
 		},
 		category : {
-			type : DataTypes.STRING
+			type : DataTypes.STRING,
+			allowNull : false
 		},
 		price : {
-			type : DataTypes.FLOAT
+			type : DataTypes.FLOAT,
+			allowNull : false
 		},
 		modelLocation : {
-			type : DataTypes.STRING
+			type : DataTypes.STRING,
+			allowNull : false
 		},
 
 	});
 
 	Dish.associate = function(models){
 		// Dish.hasMany(models.Ingredient);
-		Dish.hasMany(models.Process);
-		Dish.hasMany(models.Flavour);
+		Dish.hasMany(models.Process , {onDelete : 'CASCADE'});
+		Dish.hasMany(models.Flavour , {onDelete : 'CASCADE'});
 		Dish.belongsTo(models.Restaurant);
 	}
 

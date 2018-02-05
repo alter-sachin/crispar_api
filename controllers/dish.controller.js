@@ -97,9 +97,30 @@ function checkIngredients(ingredients){
 	return valFlag;
 }
 
+
+
+function checkMainDishData(dishObj){
+	var requiredFields = ['name','description','price','category','modelLocation'];
+	var check = {
+		notValid : false,
+		missing : ''
+	};
+	_.each(requiredFields , function(field){
+		if(!dishObj[field]){
+			check.notValid = true;
+			check.missing = check.missing + ' '+ field;
+		}
+	});
+
+	return check
+}
+
 function validateDishData(dishObj){
 	return new Promise(function(resolve , reject){
-		if(!dishObj.process || !dishObj.process.name ){
+		var check = checkMainDishData(dishObj);
+		if(check.notValid){
+			reject(new Error('dish - '+check.missing+' - missing'));	
+		}else if(!dishObj.process || !dishObj.process.name ){
 			reject(new Error('dish.process.name is missing'));
 		}else if (!dishObj.flavour || !dishObj.flavour.name){
 			reject(new Error('dish.flavour.name is missing'));
@@ -121,13 +142,14 @@ exports.addNewDish = function(req , res) {
 	dishObj.name  = req.body.name ;
 	dishObj.category = req.body.category ;
 	dishObj.description = req.body.description ;
-	dishObj.category = req.body.category;
+	dishObj.price = req.body.price;
 	dishObj.modelLocation = req.body.modelLocation;
 	dishObj.id = uuidv4();
 
 
 	var restaurantId = req.body.restaurantId;
 	var processModel , flavourModel , restaurantModel , dishModel , ingredientModels;
+
 
 	findRestaurant(restaurantId).then(function(restaurant){
 		restaurantModel = restaurant;
@@ -164,7 +186,59 @@ exports.addNewDish = function(req , res) {
 		});
 	})
 	
+}
 
+
+/*get dish data by id*/
+exports.getDishByID = function(req,res){
+	var id = req.params.dishID;
+
+	dishDB.getByID(id).then(function(dish){
+		res.json({
+			status : 0,
+			dish : dish
+		});
+	}).catch(function(err){
+		res.status(422).json({
+			status : 1,
+			message : errorHandler.getErrorMessage(err)
+		});
+	});
+}
+
+
+/*delete dish by id*/
+exports.deleteDish = function(req , res){
+	var id = req.params.dishID;
+
+	dishDB.deleteByID(id).then(function(dish){
+		res.json({
+			status : 0,
+			message : 'dish deleted successfully',
+			dish : dish
+		});
+	}).catch(function(err){
+		res.status(422).json({
+			status : 1,
+			message : errorHandler.getErrorMessage(err)
+		});
+	});
 	
 }
 
+
+exports.getDishList = function(req , res){
+
+	dishDB.getList().then(function(dish){
+		
+		res.json({
+			status : 0,
+			dish : dish
+		});
+	}).catch(function(err){
+		res.status(422).json({
+			status : 1,
+			message : errorHandler.getErrorMessage(err)
+		});
+	});
+}

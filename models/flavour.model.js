@@ -20,7 +20,7 @@ module.exports = function(sequelize , DataTypes){
 	Flavour.associate =  function(models){
 		// Flavour.belongsToMany(models.Dish , { through: 'FlavourDishMap'});
 		// models.Dish.belongsToMany(Flavour , { through: 'FlavourDishMap'});
-		Flavour.belongsTo(models.Dish);
+		Flavour.belongsTo(models.Dish , {onDelete : 'CASCADE'});
 	}
 
 	return Flavour;
