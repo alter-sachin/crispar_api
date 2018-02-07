@@ -6,6 +6,7 @@ var orderDB = require('../db_calls/order.db_call');
 var userDB = require('../db_calls/user.db_call');
 var dishDB = require('../db_calls/dish.db_call');
 var orderItemDB = require('../db_calls/order_item.db_call');
+var restaurantDB = require('../db_calls/restaurant.db_call');
 
 
 
@@ -100,11 +101,15 @@ function addOrderItems(items){
 /* add new order*/
 exports.addNewOrder = function(req , res) {
 	var userId = req.body.userId;
+	var restaurantId = req.body.restaurantId;
 	var order = req.body;
-	var userModel , orderItemModels , orderModel;
+	var userModel , orderItemModels , orderModel,restaurantModel;
 	
 	userDB.getByID(userId).then(function(user){
 		userModel = user;
+		return restaurantDB.getByID(restaurantId);
+	}).then(function(restaurant){
+		restaurantModel = restaurant;
 		return validateOrderData(order);
 	}).then(function(){
 		return addOrderItems(order.items);
@@ -114,6 +119,8 @@ exports.addNewOrder = function(req , res) {
 	}).then(function(order){
 		orderModel = order;
 		return orderModel.setUser(userModel);
+	}).then(function(){
+		return orderModel.setRestaurant(restaurantModel);
 	}).then(function(){
 		return orderModel.setOrderItems(orderItemModels);
 	}).then(function(orderModel){

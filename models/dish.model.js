@@ -36,6 +36,7 @@ module.exports = function(sequelize , DataTypes){
 		Dish.hasMany(models.Process , {onDelete : 'CASCADE'});
 		Dish.hasMany(models.Flavour , {onDelete : 'CASCADE'});
 		Dish.belongsTo(models.Restaurant);
+		Dish.hasMany(models.OrderItem);
 	}
 
 	return Dish;

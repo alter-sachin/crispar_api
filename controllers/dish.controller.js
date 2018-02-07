@@ -368,3 +368,27 @@ exports.updateDish = function(req , res){
 		});
 	});
 }
+
+
+
+/*search*/
+exports.dishSearch = function(req , res){
+	var searchObj =  {
+		search : req.query.search ? req.query.search+"%" : '%%',
+		field : req.query.field ? req.query.field : 'name'
+	}
+
+	dishDB.search(searchObj).then(function(dishes){
+		res.json({
+			status : 0,
+			dishes : dishes
+		});
+	}).catch(function(err){
+		console.log(err.stack);
+		res.status(422).json({
+			status : 1,
+			message : errorHandler.getErrorMessage(err)
+		});
+	});
+
+}

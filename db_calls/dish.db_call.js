@@ -1,5 +1,7 @@
 'use strict';
 const db = require('../config/lib/sequelize');
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 const sequelize = db.sequelize;
 const Dish = db.models.Dish;
 const Process = db.models.Process;
@@ -108,6 +110,25 @@ exports.getList = function(){
 			include : [Process,Flavour,Ingredient]
 		}).then(function(dishes){
 			resolve(dishes)
+		}).catch(function(err){
+			reject(err);
+		});
+	});
+}
+
+
+exports.search = function(searchObj){
+	var query = {
+		where : {
+			[searchObj.field] : {
+				[Op.like] : searchObj.search
+			}
+		}
+	}
+
+	return new Promise(function(resolve,reject){
+		Dish.findAll(query).then(function(dishes){
+			resolve(dishes);
 		}).catch(function(err){
 			reject(err);
 		});

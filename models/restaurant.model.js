@@ -32,6 +32,7 @@ module.exports = function(sequelize , DataTypes){
 
 	Restaurant.associate = function(models){
 		Restaurant.hasMany(models.Dish);
+		Restaurant.hasMany(models.Order);
 	}
 
 	return Restaurant;

@@ -17,6 +17,7 @@ module.exports = function(sequelize , DataTypes){
 
 	Order.associate = function(models){
 		Order.belongsTo(models.User);
+		Order.belongsTo(models.Restaurant);
 		Order.hasMany(models.OrderItem);
 	}
 
