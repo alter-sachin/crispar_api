@@ -7,6 +7,11 @@ module.exports = function(sequelize , DataTypes){
 		id : {
 			type : DataTypes.UUID,
 			primaryKey : true
+		},
+		status : {
+			type : DataTypes.ENUM,
+			defaultValue  :"registered",
+			values: ['registered', 'processing','completed']
 		}
 	});
 

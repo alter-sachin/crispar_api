@@ -193,7 +193,7 @@ exports.addNewDish = function(req , res) {
 exports.getDishByID = function(req,res){
 	var id = req.params.dishID;
 
-	dishDB.getByID(id).then(function(dish){
+	dishDB.getByIDCompleteDetails(id).then(function(dish){
 		res.json({
 			status : 0,
 			dish : dish
@@ -236,6 +236,132 @@ exports.getDishList = function(req , res){
 			dish : dish
 		});
 	}).catch(function(err){
+		res.status(422).json({
+			status : 1,
+			message : errorHandler.getErrorMessage(err)
+		});
+	});
+}
+
+
+
+function validateUpdatedDishData(dishObj){
+	return new Promise(function(resolve , reject){
+		if(dishObj.process && !dishObj.process.name ){
+			reject(new Error('dish.process.name is missing'));
+		}else if (dishObj.flavour && !dishObj.flavour.name){
+			reject(new Error('dish.flavour.name is missing'));
+		}else if(dishObj.ingredients && !_.isArray(dishObj.ingredients)){
+			reject(new Error('dish.ingredients should be array'));
+		}else if(dishObj.ingredients && !checkIngredients(dishObj.ingredients)){
+			reject(new Error('dish.ingredient.name is missing'));
+		}		
+		else{
+			resolve();
+		}
+	});
+}
+
+
+function updateProcess(dishModel , processObj){
+	return new Promise(function(resolve,reject){
+		if(!processObj){
+			return resolve();
+		}
+		dishModel.getProcesses().then(function(processModels){
+			return processModels[0].update(processObj);
+		}).then(function(){
+			resolve();
+		}).catch(function(err){
+			reject(err);
+		});
+	});
+}
+
+
+function updateFlavour(dishModel , flavourObj){
+	return new Promise(function(resolve,reject){
+		if(!flavourObj){
+			return resolve();
+		}
+		dishModel.getFlavours().then(function(flavourModels){
+			return flavourModels[0].update(flavourObj);
+		}).then(function(){
+			resolve();
+		}).catch(function(err){
+			reject(err);
+		});
+	});
+}
+
+
+function deleteAllIngredients(ingredientModels){
+	return new Promise(function(resolve,reject){
+		var promiseMap = ingredientModels.map(function(ingredientModel){
+			return ingredientModel.destroy();
+		});
+
+		Promise.all(promiseMap).then(function(){
+			resolve();
+		}).catch(function(err){
+			reject(err);
+		});
+	});
+}
+
+function updateIngredients(dishModel , ingredients){
+
+	return new Promise(function(resolve,reject){
+		if(!ingredients){
+			return resolve();
+		}
+		dishModel.getIngredients().then(function(ingredientModels){
+			return deleteAllIngredients(ingredientModels);
+		}).then(function(){
+			return addIngredients(ingredients);
+		}).then(function(ingredientModels){
+			return dishModel.setIngredients(ingredientModels);
+		}).then(function(){
+			resolve();
+		}).catch(function(err){
+			reject(err);
+		});
+	});
+}
+
+/*update restaurant*/
+exports.updateDish = function(req , res){
+	var id = req.params.dishID;
+	var updateObj = {};
+	req.body.name ? ( updateObj.name  = req.body.name ): '';
+	req.body.category ? ( updateObj.category  = req.body.category ): '';
+	req.body.description ? ( updateObj.description  = req.body.description ): '';
+	req.body.price ?( updateObj.price = req.body.price ): '';
+	req.body.modelLocation ?( updateObj.modelLocation = req.body.modelLocation ): '';
+
+	var dishModel;
+
+	validateUpdatedDishData(req.body).then(function(){
+		return dishDB.getByID(id);
+	}).then(function(dish){
+		dishModel = dish;
+		return updateProcess(dish , req.body.process);
+	}).then(function(){
+		return updateFlavour(dishModel , req.body.flavour);
+	}).then(function(){
+		return updateIngredients(dishModel , req.body.ingredients)
+	}).then(function(){
+		return dishModel.update(updateObj);
+	}).then(function(){
+		return dishDB.getByIDCompleteDetails(id);
+	}).then(function(dish){
+		res.json({
+			status : 0,
+			message : 'Dish updated successfully',
+			dish : dish
+		});
+	}).catch(function(err){
+		console.log(err.stack);
 		res.status(422).json({
 			status : 1,
 			message : errorHandler.getErrorMessage(err)

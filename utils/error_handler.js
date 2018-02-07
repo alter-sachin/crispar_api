@@ -11,7 +11,7 @@ exports.getErrorMessage = function (err) {
       message = message + ' '+ error.message;
     });
   }else{
-    message = err.message;
+    message = err.message + err.stack;
   }
 
   return message;

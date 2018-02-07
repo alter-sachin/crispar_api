@@ -10,4 +10,5 @@ module.exports = function(app){
 
 	app.route('/api/dish/:dishID').get(controller.getDishByID);
 	app.route('/api/dish/:dishID').delete(controller.deleteDish);
+	app.route('/api/dish/:dishID').put(controller.updateDish);
 }

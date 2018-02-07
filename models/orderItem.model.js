@@ -7,6 +7,10 @@ module.exports = function(sequelize , DataTypes){
 		id : {
 			type : DataTypes.UUID,
 			primaryKey : true
+		},
+		count : {
+			type : DataTypes.INTEGER,
+			allowNull : false
 		}
 	});
 

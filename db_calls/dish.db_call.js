@@ -10,9 +10,7 @@ const Flavour = db.models.Flavour;
 /*get model instance from db*/
 function findDishByID(id){
 	return new Promise(function(resolve , reject ){
-		Dish.findById(id,{
-			include : [Process , Ingredient , Flavour]
-		}).then(function(dish){
+		Dish.findById(id).then(function(dish){
 			if(!dish){
 				return reject(new Error('No dish found for id'));
 			}
@@ -45,6 +43,26 @@ exports.getByID = function(id){
 		}).catch(function(err){
 			reject(err);	
 		});
+	});
+}
+
+
+/*find by id*/
+exports.getByIDCompleteDetails = function(id){
+ 
+	return new Promise(function(resolve,reject){
+		
+		Dish.findById(id,{
+			include : [Process , Ingredient , Flavour]
+		}).then(function(dish){
+			if(!dish){
+				return reject(new Error('No dish found for id'));
+			}
+			resolve(dish);
+		}).catch(function(err){
+			reject(err);
+		});
+
 	});
 }
 
