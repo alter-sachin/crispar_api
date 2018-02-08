@@ -8,11 +8,11 @@ API to add new restaurant.
 
 ```javascript
     {   
-    "name" : "afsfsf",(String)
-    "address" : "asdasdewwesa"(String),
-    "phoneNumbers" : ["545344"](Array of strings),
-    "latitude" : 155645(Number),
-    "longitude": 546432(Number)
+    "name" : "afsfsf",(String - required)
+    "address" : "asdasdewwesa"(String - required),
+    "phoneNumbers" : ["545344"](Array of strings - required),
+    "latitude" : 155645(Float Number - required),
+    "longitude": 546432(Float Number - required)
 }
 ```
 
@@ -191,6 +191,10 @@ Defaut limit 250;
 
 
 ##### params  -
+
+###### status
+    String - get list of orders with status as ['registered','processing','completed'] - default registered
+
 ###### start 
     Number - start index of list - default 0
 ###### limit
