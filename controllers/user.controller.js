@@ -3,7 +3,8 @@ const uuidv4 = require('uuid/v4');
 const errorHandler = require('../utils/error_handler');
 const _ = require('lodash');
 var userDB = require('../db_calls/user.db_call');
-
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 
 
 
@@ -94,7 +95,7 @@ exports.updateUser = function(req , res){
 }
 
 
-
+/* get list of all users*/
 exports.getUsersList = function(req , res){
 	var params = {
 		start : req.query.start ? _.toNumber(req.query.start) : 0,
@@ -106,6 +107,45 @@ exports.getUsersList = function(req , res){
 		res.json({
 			status : 0,
 			users : users
+		});
+	}).catch(function(err){
+		res.status(422).json({
+			status : 1,
+			message : errorHandler.getErrorMessage(err)
+		});
+	});
+}
+
+
+
+/*get list of orders of a particluar user*/
+exports.getOrdersOfUser = function(req , res){
+	var id = req.params.userID;
+	var status = req.query.status ? req.query.status : '%%' ;
+	var sortBy = req.query.sortBy ? req.query.sortBy : 'createdAt';
+	var order = req.query.order ? req.query.order : 'DESC';
+	var start = req.query.start ? _.toNumber(req.query.start) : 0;
+	var limit = req.query.limit ? _.toNumber(req.query.limit) : 250;
+	
+	var query = {
+		offset : start,
+		limit : limit,
+		where:{
+			status: { 
+				[Op.like] : status
+			}
+		},
+		order : [
+			[sortBy , order]
+		]
+	}
+	
+	userDB.getByID(id).then(function(user){
+		return user.getOrders(query);
+	}).then(function(orderModels){
+		res.json({
+			status : 0,
+			orders : orderModels
 		});
 	}).catch(function(err){
 		res.status(422).json({

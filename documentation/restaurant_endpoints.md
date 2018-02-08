@@ -186,7 +186,7 @@ http://localhost:3000/api/restaurant/ed492315-070c-405e-9aa4-0d1e4673cb40
 Get orders list of restaurant with Id= restaurantID
 ### Request
 
-Return the list of restaurants in database.
+Return the list of orders in database.
 Defaut limit 250;
 
 

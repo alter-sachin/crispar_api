@@ -158,3 +158,49 @@ http://localhost:3000/api/user/ed492315-070c-405e-9aa4-0d1e4673cb40
 
 ```
 
+
+### GET @*/api/user/:userID/orders*
+
+Get orders list of user with Id= userID
+### Request
+
+Return the list of orders of user in database.
+Defaut limit 250;
+
+
+##### params  -
+
+###### status
+    String - get list of orders with status as ['registered','processing','completed'] - default registered
+
+###### start 
+    Number - start index of list - default 0
+###### limit
+    Number - count of restaurants required - default 250
+###### sortBy
+    String - define sorting field - default createdAt
+###### order
+    String - define sorting order ASC or DESC - default DESC
+
+```
+http://localhost:3000/api/user/e83e1b4c-d79e-48b8-8525-63a61353fa1f/orders?status=completed
+```
+
+### Response
+
+```javascript
+{
+    "status": 0,
+    "orders": [
+        {
+            "id": "edb6244c-b87a-404d-a868-cc57f0d01bbf",
+            "status": "completed",
+            "createdAt": "2018-02-08T09:26:25.000Z",
+            "updatedAt": "2018-02-08T09:27:38.000Z",
+            "userId": "e83e1b4c-d79e-48b8-8525-63a61353fa1f",
+            "restaurantId": "ed492315-070c-405e-9aa4-0d1e4673cb40"
+        }
+    ]
+}
+
+```

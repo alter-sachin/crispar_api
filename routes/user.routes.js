@@ -11,4 +11,6 @@ module.exports = function(app){
 	app.route('/api/user/:userID').get(controller.getUserByID);
 	app.route('/api/user/:userID').delete(controller.deleteUser);
 	app.route('/api/user/:userID').put(controller.updateUser);
+
+	app.route('/api/user/:userID/orders').get(controller.getOrdersOfUser);
 }
