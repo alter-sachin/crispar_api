@@ -182,8 +182,14 @@ exports.deleteOrder = function(req , res){
 
 /*get all orders list */
 exports.getOrdersList = function(req , res){
+	var params = {
+		start : req.query.start ? _.toNumber(req.query.start) : 0,
+		limit : req.query.limit ? _.toNumber(req.query.limit) : 250,
+		sortBy : req.query.sortBy ? req.query.sortBy : 'createdAt',
+		order : req.query.order ? req.query.order : 'DESC'
+	};
 
-	orderDB.getList().then(function(orders){	
+	orderDB.getList(params).then(function(orders){	
 		res.json({
 			status : 0,
 			orders : orders

@@ -96,8 +96,13 @@ exports.updateUser = function(req , res){
 
 
 exports.getUsersList = function(req , res){
-
-	userDB.getList().then(function(users){
+	var params = {
+		start : req.query.start ? _.toNumber(req.query.start) : 0,
+		limit : req.query.limit ? _.toNumber(req.query.limit) : 250,
+		sortBy : req.query.sortBy ? req.query.sortBy : 'createdAt',
+		order : req.query.order ? req.query.order : 'DESC'
+	};
+	userDB.getList(params).then(function(users){
 		res.json({
 			status : 0,
 			users : users

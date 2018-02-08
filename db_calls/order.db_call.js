@@ -72,12 +72,18 @@ exports.getByID = function(id){
 	});
 }
 
-
-exports.getList = function(){
+/*get list of restaurants*/
+exports.getList = function(params){
+	var query = {
+		offset : params.start,
+		limit : params.limit,
+		order  : [
+			[params.sortBy , params.order]
+		],
+		include : [OrderItem]
+	}
 	return new Promise(function(resolve,reject){
-		Order.all({
-			include : [OrderItem]
-		}).then(function(orders){
+		Order.findAll(query).then(function(orders){
 			resolve(orders)
 		}).catch(function(err){
 			reject(err);

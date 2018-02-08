@@ -104,11 +104,17 @@ exports.update = function(id , updateObj){
 }
 
 
-exports.getList = function(){
+exports.getList = function(params){
+	var query = {
+		offset : params.start,
+		limit : params.limit,
+		order  : [
+			[params.sortBy , params.order]
+		],
+		include : [Process,Flavour,Ingredient]
+	}
 	return new Promise(function(resolve,reject){
-		Dish.all({
-			include : [Process,Flavour,Ingredient]
-		}).then(function(dishes){
+		Dish.findAll(query).then(function(dishes){
 			resolve(dishes)
 		}).catch(function(err){
 			reject(err);

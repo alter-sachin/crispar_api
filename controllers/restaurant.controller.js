@@ -108,8 +108,14 @@ exports.updateRestaurant = function(req , res){
 
 
 exports.getRestaurantsList = function(req , res){
+	var params = {
+		start : req.query.start ? _.toNumber(req.query.start) : 0,
+		limit : req.query.limit ? _.toNumber(req.query.limit) : 250,
+		sortBy : req.query.sortBy ? req.query.sortBy : 'createdAt',
+		order : req.query.order ? req.query.order : 'DESC'
+	};
 
-	restaurantDB.getList().then(function(restaurants){
+	restaurantDB.getList(params).then(function(restaurants){
 		
 		_.each(restaurants , function(restaurant){ 
 			parsePhoneNumberString(restaurant);
@@ -133,8 +139,12 @@ exports.getOrdersOfRestaurant = function(req , res){
 	var status = req.query.status ? req.query.status : '%%' ;
 	var sortBy = req.query.sortBy ? req.query.sortBy : 'createdAt';
 	var order = req.query.order ? req.query.order : 'DESC';
+	var start = req.query.start ? _.toNumber(req.query.start) : 0;
+	var limit = req.query.limit ? _.toNumber(req.query.limit) : 250;
 	
 	var query = {
+		offset : start,
+		limit : limit,
 		where:{
 			status: { 
 				[Op.like] : status
@@ -161,8 +171,20 @@ exports.getOrdersOfRestaurant = function(req , res){
 }
 
 
+
+
+
+function convertObjectToArray(categoryObj){
+	var categoryArray = [];
+	_.each(categoryObj , function(category){
+		categoryArray.push(category);
+	});
+	return categoryArray;
+}
+
 function parseDishesByCategories(dishes){
 	var categoryObj = {};
+	var categoryArray ;
 	_.each(dishes , function(dish){
 		if(categoryObj[dish.category]){
 			categoryObj[dish.category].dishes.push(dish);
@@ -172,7 +194,8 @@ function parseDishesByCategories(dishes){
 			categoryObj[dish.category].dishes = [dish];
 		}
 	});
-	return categoryObj;
+	categoryArray = convertObjectToArray(categoryObj);
+	return categoryArray;
 }
 
 /*get dishes*/

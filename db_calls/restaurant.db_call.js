@@ -81,9 +81,16 @@ exports.update = function(id , updateObj){
 }
 
 
-exports.getList = function(){
+exports.getList = function(params){
+	var query = {
+		offset : params.start,
+		limit : params.limit,
+		order  : [
+			[params.sortBy , params.order]
+		]
+	}
 	return new Promise(function(resolve,reject){
-		Restaurant.all().then(function(restaurants){
+		Restaurant.findAll(query).then(function(restaurants){
 			resolve(restaurants)
 		}).catch(function(err){
 			reject(err);

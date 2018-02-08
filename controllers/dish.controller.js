@@ -10,32 +10,42 @@ var ingredientDB = require('../db_calls/ingredient.db_call');
 
 
 
-function addProcess(dishProcessObj){
+function addProcess(dishProcessObj,dishModel){
 	return new Promise(function(resolve , reject){
-		if(!dishProcessObj || !dishProcessObj.name){
-			reject(new Error('dish.process.name is missing'));
-		}else{
-			processDB.addNew(dishProcessObj).then(function(process){
-				resolve(process);
-			}).catch(function(err){
-				reject(err);
-			});
+		if(!dishProcessObj){
+			return resolve();
 		}
+		if(dishProcessObj && !dishProcessObj.name){
+			return reject(new Error('dish.process.name is missing'));
+		}
+		processDB.addNew(dishProcessObj).then(function(process){
+			return process.setDish(dishModel);
+		}).then(function(){
+			resolve(process);
+		}).catch(function(err){
+			reject(err);
+		});
+		
 	});
 }
 
 
-function addFlavour(flavourObj){
+function addFlavour(flavourObj,dishModel){
 	return new Promise(function(resolve , reject){
-		if(!flavourObj || !flavourObj.name){
-			reject(new Error('dish.flavour.name is missing'));
-		}else{
-			flavourDB.addNew(flavourObj).then(function(flavour){
-				resolve(flavour);
-			}).catch(function(err){
-				reject(err);
-			});
+		if(!flavourObj){
+			return resolve();
 		}
+		if(flavourObj && !flavourObj.name){
+			return reject(new Error('dish.flavour.name is missing'));
+		}
+		flavourDB.addNew(flavourObj).then(function(flavour){
+			return flavour.setDish(dishModel);
+		}).then(function(){
+			resolve();
+		}).catch(function(err){
+			reject(err);
+		});
+		
 	});
 }
 
@@ -58,17 +68,23 @@ function addSingleIngredient(ingredient){
 
 
 
-function addIngredients(ingredients){
+function addIngredients(ingredients , dishModel){
 	return new Promise(function(resolve,reject){
+		if(!ingredients){
+			return resolve();
+		}
+		
 		var promiseMap = ingredients.map(function(ingredient){
 			return addSingleIngredient(ingredient);
 		});
 
 		Promise.all(promiseMap).then(function(ingredientModels){
-			resolve(ingredientModels);
+			return dishModel.setIngredients(ingredientModels);
+		}).then(function(){
+			resolve();
 		}).catch(function(err){
 			reject(err);
-		})
+		});
 	});
 }
 
@@ -120,13 +136,13 @@ function validateDishData(dishObj){
 		var check = checkMainDishData(dishObj);
 		if(check.notValid){
 			reject(new Error('dish - '+check.missing+' - missing'));	
-		}else if(!dishObj.process || !dishObj.process.name ){
+		}else if(dishObj.process && !dishObj.process.name ){
 			reject(new Error('dish.process.name is missing'));
-		}else if (!dishObj.flavour || !dishObj.flavour.name){
+		}else if (dishObj.flavour && !dishObj.flavour.name){
 			reject(new Error('dish.flavour.name is missing'));
-		}else if(!_.isArray(dishObj.ingredients)){
+		}else if(dishObj.ingredients && !_.isArray(dishObj.ingredients)){
 			reject(new Error('dish.ingredients should be array'));
-		}else if(!checkIngredients(dishObj.ingredients)){
+		}else if(dishObj.ingredients && !checkIngredients(dishObj.ingredients)){
 			reject(new Error('dish.ingredient.name is missing'));
 		}		
 		else{
@@ -148,32 +164,25 @@ exports.addNewDish = function(req , res) {
 
 
 	var restaurantId = req.body.restaurantId;
-	var processModel , flavourModel , restaurantModel , dishModel , ingredientModels;
+	var restaurantModel , dishModel ;
+	var processObj = req.body.process;
+	var flavourObj = req.body.flavour;
+	var ingredients = req.body.ingredients;
+
 
 
 	findRestaurant(restaurantId).then(function(restaurant){
 		restaurantModel = restaurant;
 		return validateDishData(req.body);
 	}).then(function(){
-		return addProcess(req.body.process);
-	}).then(function(process){
-		processModel = process;
-		return addFlavour(req.body.flavour);
-	}).then(function(flavour){
-		flavourModel = flavour;
-		return addIngredients(req.body.ingredients);
-	}).then(function(ingredients){
-		ingredientModels = ingredients;
 		return dishDB.addNew(dishObj);
 	}).then(function(dish){
 		dishModel = dish;
-		return dish.setRestaurant(restaurantModel);
+		return addProcess(processObj , dishModel);
 	}).then(function(){
-		return processModel.setDish(dishModel);
+		return addFlavour(flavourObj , dishModel);
 	}).then(function(){
-		return flavourModel.setDish(dishModel);
-	}).then(function(){
-		return dishModel.setIngredients(ingredientModels);
+		return addIngredients(ingredients , dishModel)
 	}).then(function(flavour){
 		res.json({
 			status : 0,
@@ -228,8 +237,14 @@ exports.deleteDish = function(req , res){
 
 
 exports.getDishList = function(req , res){
+	var params = {
+		start : req.query.start ? _.toNumber(req.query.start) : 0,
+		limit : req.query.limit ? _.toNumber(req.query.limit) : 250,
+		sortBy : req.query.sortBy ? req.query.sortBy : 'createdAt',
+		order : req.query.order ? req.query.order : 'DESC'
+	};
 
-	dishDB.getList().then(function(dish){
+	dishDB.getList(params).then(function(dish){
 		
 		res.json({
 			status : 0,
@@ -269,7 +284,12 @@ function updateProcess(dishModel , processObj){
 			return resolve();
 		}
 		dishModel.getProcesses().then(function(processModels){
-			return processModels[0].update(processObj);
+			if(!processModels[0]){
+				return Promise.resolve();
+			}
+			return processModels[0].destroy();
+		}).then(function(){
+			return addProcess(processObj,dishModel);
 		}).then(function(){
 			resolve();
 		}).catch(function(err){
@@ -285,7 +305,12 @@ function updateFlavour(dishModel , flavourObj){
 			return resolve();
 		}
 		dishModel.getFlavours().then(function(flavourModels){
-			return flavourModels[0].update(flavourObj);
+			if(!flavourModels[0]){
+				return Promise.resolve();
+			}
+			return flavourModels[0].destroy();
+		}).then(function(){
+			return addFlavour(flavourObj,dishModel);
 		}).then(function(){
 			resolve();
 		}).catch(function(err){
@@ -318,9 +343,7 @@ function updateIngredients(dishModel , ingredients){
 		dishModel.getIngredients().then(function(ingredientModels){
 			return deleteAllIngredients(ingredientModels);
 		}).then(function(){
-			return addIngredients(ingredients);
-		}).then(function(ingredientModels){
-			return dishModel.setIngredients(ingredientModels);
+			return addIngredients(ingredients,dishModel);
 		}).then(function(){
 			resolve();
 		}).catch(function(err){

@@ -256,25 +256,25 @@ http://localhost:3000/api/restaurant/ed492315-070c-405e-9aa4-0d1e4673cb40/menu
 {
     "status": 0,
     "restaurant": {
-        "categories": {
-            "indian": {
+        "categories": [
+            {
                 "categoryName": "indian",
                 "dishes": [
                     {
-                        "id": "4ad29e90-7375-41da-bce2-caa4fe7bdee5",
-                        "name": "delte checeka",
+                        "id": "07fbfd15-3a30-49a1-bcb8-08fee043dc71",
+                        "name": "remnae",
                         "description": "buttenr in chicken",
                         "category": "indian",
                         "price": 500,
                         "modelLocation": "safdsds",
-                        "createdAt": "2018-02-07T17:26:48.000Z",
-                        "updatedAt": "2018-02-07T17:26:48.000Z",
+                        "createdAt": "2018-02-08T05:55:47.000Z",
+                        "updatedAt": "2018-02-08T06:05:13.000Z",
                         "restaurantId": "ed492315-070c-405e-9aa4-0d1e4673cb40"
                     },
                     ...
                 ]
             },
-            "parantha": {
+            {
                 "categoryName": "parantha",
                 "dishes": [
                     {
@@ -287,10 +287,11 @@ http://localhost:3000/api/restaurant/ed492315-070c-405e-9aa4-0d1e4673cb40/menu
                         "createdAt": "2018-02-07T17:59:30.000Z",
                         "updatedAt": "2018-02-07T17:59:30.000Z",
                         "restaurantId": "ed492315-070c-405e-9aa4-0d1e4673cb40"
-                    }
+                    },
+                    ...
                 ]
             }
-        },
+        ],
         "id": "ed492315-070c-405e-9aa4-0d1e4673cb40",
         "name": "new name",
         "address": "new address",
