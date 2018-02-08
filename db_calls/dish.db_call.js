@@ -123,8 +123,13 @@ exports.getList = function(params){
 }
 
 
-exports.search = function(searchObj){
+exports.search = function(searchObj,params){
 	var query = {
+		offset : params.start,
+		limit : params.limit,
+		order  : [
+			[params.sortBy , params.order]
+		],
 		where : {
 			[searchObj.field] : {
 				[Op.like] : searchObj.search

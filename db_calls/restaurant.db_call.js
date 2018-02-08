@@ -2,7 +2,8 @@
 const db = require('../config/lib/sequelize');
 const sequelize = db.sequelize;
 const Restaurant = db.models.Restaurant;
-
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 
 /*get model instance from db*/
 function findRestaurantByID(id){
@@ -88,6 +89,35 @@ exports.getList = function(params){
 		order  : [
 			[params.sortBy , params.order]
 		]
+	}
+	return new Promise(function(resolve,reject){
+		Restaurant.findAll(query).then(function(restaurants){
+			resolve(restaurants)
+		}).catch(function(err){
+			reject(err);
+		});
+	});
+}
+
+
+
+exports.locationSearch = function(params){
+	var query = {
+		offset : params.start,
+		limit : params.limit,
+		order  : [
+			[params.sortBy , params.order]
+		],
+		where : {
+			latitude : {
+				[Op.gte] : (params.latitude - params.range),
+				[Op.lte] : (params.latitude + params.range)
+			},
+			longitude : {
+				[Op.gte] : (params.longitude - params.range),
+				[Op.lte] : (params.longitude + params.range)
+			}
+		}
 	}
 	return new Promise(function(resolve,reject){
 		Restaurant.findAll(query).then(function(restaurants){

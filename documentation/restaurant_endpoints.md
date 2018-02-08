@@ -304,3 +304,55 @@ http://localhost:3000/api/restaurant/ed492315-070c-405e-9aa4-0d1e4673cb40/menu
 }
 
 ```
+
+
+
+### GET @*/api/search/restaurant/location*
+
+Search for dish in database based on string match in particluar field
+Limit 250
+### Request
+
+##### params  -
+
+###### latitude
+    String - latitude to search nearby - default 0
+###### longitude
+    String - longitude to search nearby - default 0
+###### range
+    String - range in area( lat long minus range ) - default 0.1
+###### start 
+    Number - start index of list - default 0
+###### limit
+    Number - count of restaurants required - default 250
+###### sortBy
+    String - define sorting field - default createdAt
+###### order
+    String - define sorting order ASC or DESC - default DESC
+
+```
+http://localhost:3000/api/search/restaurant/location?latitude=30.7548&longitude=76.7876
+```
+    
+### Response
+
+```javascript
+{
+    "status": 0,
+    "restaurants": [
+        {
+            "id": "87731490-5340-46e3-808e-24c2d24a3b12",
+            "name": "pa",
+            "address": "asdasdewwesa",
+            "phoneNumbers": [
+                "545344"
+            ],
+            "latitude": 30.7548,
+            "longitude": 76.7876,
+            "createdAt": "2018-02-08T10:22:19.000Z",
+            "updatedAt": "2018-02-08T10:22:19.000Z"
+        },
+        ...
+    ]
+}
+```

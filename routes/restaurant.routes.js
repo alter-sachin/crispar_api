@@ -15,5 +15,6 @@ module.exports = function(app){
 	app.route('/api/restaurant/:restaurantID/orders').get(controller.getOrdersOfRestaurant);
 	app.route('/api/restaurant/:restaurantID/menu').get(controller.getMenuOfRestaurant);
 
+	app.route('/api/search/restaurant/location').get(controller.locationSearch);
 
 }

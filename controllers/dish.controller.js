@@ -73,7 +73,7 @@ function addIngredients(ingredients , dishModel){
 		if(!ingredients){
 			return resolve();
 		}
-		
+
 		var promiseMap = ingredients.map(function(ingredient){
 			return addSingleIngredient(ingredient);
 		});
@@ -396,12 +396,18 @@ exports.updateDish = function(req , res){
 
 /*search*/
 exports.dishSearch = function(req , res){
+	var params = {
+		start : req.query.start ? _.toNumber(req.query.start) : 0,
+		limit : req.query.limit ? _.toNumber(req.query.limit) : 250,
+		sortBy : req.query.sortBy ? req.query.sortBy : 'createdAt',
+		order : req.query.order ? req.query.order : 'DESC'
+	};
 	var searchObj =  {
 		search : req.query.search ? req.query.search+"%" : '%%',
 		field : req.query.field ? req.query.field : 'name'
 	}
 
-	dishDB.search(searchObj).then(function(dishes){
+	dishDB.search(searchObj , params).then(function(dishes){
 		res.json({
 			status : 0,
 			dishes : dishes

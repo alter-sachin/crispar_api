@@ -346,14 +346,19 @@ http://localhost:3000/dish/restaurant/ed492315-070c-405e-9aa4-0d1e4673cb40
 ### GET @*/api/search/dish*
 
 Search for dish in database based on string match in particluar field
-
+Limit 250
 ### Request
 
 ##### params  -
+
 ###### search 
     String - string to match in dish fields - default ''
 ###### field
     String - database field name in which to search - default 'name'
+###### start 
+    Number - start index of list - default 0
+###### limit
+    Number - count of restaurants required - default 250
 ###### sortBy
     String - define sorting field - default createdAt
 ###### order

@@ -205,6 +205,9 @@ exports.getMenuOfRestaurant = function(req , res){
 	var restaurantObj = {};
 
 	restaurantDB.getByID(id).then(function(restaurant){
+		
+		parsePhoneNumberString(restaurant);
+		
 		restaurantModel = restaurant;
 		return restaurant.getDishes();
 	}).then(function(dishes){
@@ -220,4 +223,34 @@ exports.getMenuOfRestaurant = function(req , res){
 			message : errorHandler.getErrorMessage(err)
 		});
 	});
+}
+
+
+exports.locationSearch = function(req , res){
+	var params = {
+		start : req.query.start ? _.toNumber(req.query.start) : 0,
+		limit : req.query.limit ? _.toNumber(req.query.limit) : 250,
+		sortBy : req.query.sortBy ? req.query.sortBy : 'createdAt',
+		order : req.query.order ? req.query.order : 'DESC',
+		latitude : req.query.latitude ? _.toNumber(req.query.latitude)  : 0,
+		longitude : req.query.longitude ? _.toNumber(req.query.longitude) : 0,
+		range : req.query.range ? _toNumber(req.query.range) : 0.1
+	};
+
+	restaurantDB.locationSearch(params).then(function(restaurants){
+		_.each(restaurants , function(restaurant){ 
+			parsePhoneNumberString(restaurant);
+		});
+
+		res.json({
+			status : 0,
+			restaurants : restaurants
+		});
+	}).catch(function(err){
+		res.status(422).json({
+			status : 1,
+			message : errorHandler.getErrorMessage(err)
+		});
+	});
+
 }
