@@ -16,7 +16,7 @@ module.exports = function(sequelize , DataTypes){
 	});
 
 	Order.associate = function(models){
-		Order.belongsTo(models.User , {onDelete : 'CASCADE'});
+		Order.belongsTo(models.Table , {onDelete : 'CASCADE'});
 		Order.belongsTo(models.Restaurant, {onDelete : 'CASCADE'});
 		Order.hasMany(models.OrderItem);
 	}

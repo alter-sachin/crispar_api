@@ -4,6 +4,7 @@
 module.exports = function(app){
 
 	var controller = require('../controllers/user.controller');
+	//app.route('/api/table').post(controller.addNewTable);
 
 	app.route('/api/user').post(controller.addNewUser);
 	app.route('/api/user/list').get(controller.getUsersList);

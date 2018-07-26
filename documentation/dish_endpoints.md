@@ -9,7 +9,7 @@ API to add new dish.
 ```javascript
     {   
     "name" : "delte checeka"(String -required),
-    "restaurantId" : "ed492315-070c-405e-9aa4-0d1e4673cb40"( UUID - required),
+    "restaurantId" : "9ed0bd26-6d1e-4d18-ba2e-12232d19b287"( UUID - required),
     "category" : "parantha"(String -required),
     "description" : "buttenr in chicken"(String -required),
     "price" : 500(INTEGER -required),

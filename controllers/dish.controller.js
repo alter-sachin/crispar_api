@@ -68,7 +68,7 @@ function addSingleIngredient(ingredient){
 
 
 
-function addIngredients(ingredients , dishModel){
+function addIngredients(ingredients , dishModel){ 
 	return new Promise(function(resolve,reject){
 		if(!ingredients){
 			return resolve();
@@ -178,6 +178,9 @@ exports.addNewDish = function(req , res) {
 		return dishDB.addNew(dishObj);
 	}).then(function(dish){
 		dishModel = dish;
+		return dishModel.setRestaurant(restaurantModel);
+		
+	}).then(function(){
 		return addProcess(processObj , dishModel);
 	}).then(function(){
 		return addFlavour(flavourObj , dishModel);

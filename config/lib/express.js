@@ -14,6 +14,7 @@ var restaurantRoute = require('../../routes/restaurant.routes');
 var userRoute = require('../../routes/user.routes');
 var dishRoutes = require('../../routes/dish.routes');
 var orderRoutes = require('../../routes/order.routes');
+var tableRoutes = require('../../routes/table.routes');
 
 
 function initMiddleWares(app) {
@@ -52,6 +53,7 @@ function initRoutes(app){
   userRoute(app);
   dishRoutes(app);
   orderRoutes(app);
+  tableRoutes(app);
 }
 
 
