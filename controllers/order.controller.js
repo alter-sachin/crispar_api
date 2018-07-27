@@ -242,13 +242,16 @@ exports.addNewOrderTable = function(req , res) {
 				
 			});
 			
-		}else if(response.status=="occupied" && response.callerID==callerId){
+		}else if(response.status=="occupied"){
 			if(response.token==accessToken){
 				addOrder(reqbody,tableModel).then(function(order){
 				res.json(order);
 			});
 			}else{
-				res.json("not validated");
+				res.json({
+			status : 1,
+			message : "Token not Validated"
+		      });
 
 			}
 
@@ -308,7 +311,7 @@ function addOrder(body,table){
 	}).catch(function(err){
 		var obj={
 			status : 1,
-			message : errorHandler.getErrorMessage(err)
+			message : "There is some error"
 		}
 		reject(obj);
 	});
