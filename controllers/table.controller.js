@@ -78,8 +78,9 @@ exports.updateTableStatus=function(req,res){
 		tableModel=table;
 		return tableModel.update({status:status})	
 	}).then(function(){
-      return tableModel.removeGroup();
-
+      return tableModel.getGroup();
+	}).then(function(group){
+		return group.destroy({ force: true });	
 	}).then(function(){
 		res.json(tableModel.toJSON())
 	}).catch(function(err){
