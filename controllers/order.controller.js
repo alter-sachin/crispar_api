@@ -99,9 +99,9 @@ function addOrderItems(items){
 	});
 }
 
-function validateTableStatus(tableModel,id){
+function validateTableStatus(tableModel){
 	var accessToken;
-	var callerId=id;
+	//var callerId=id;
 	console.log(id);
 	return new Promise(function(resolve,reject){
 		if(tableModel.status=="free"){
@@ -111,7 +111,7 @@ function validateTableStatus(tableModel,id){
 					var groupObj={};
 					groupObj.id =uuidv4();
 					groupObj.token=randomNumber.toString();
-					groupObj.callerID=callerId;
+					//groupObj.callerID=callerId;
 					groupDB.addNew(groupObj).then(function(groupModel){
 						return tableModel.setGroup(groupModel)
 
@@ -154,7 +154,7 @@ function validateTableStatus(tableModel,id){
 				
 				responseJson.status="occupied";
 				responseJson.token=mainJson.token;
-				responseJson.callerID=mainJson.callerID;
+		
 
 				resolve(responseJson);
 			}).catch(function(err){
@@ -172,6 +172,7 @@ function validateTableStatus(tableModel,id){
 
 /* add new order*/
 exports.addNewOrder = function(req , res) {
+
 	var userId = req.body.userId;
 	var restaurantId = req.body.restaurantId;
 	var order = req.body;
@@ -213,10 +214,12 @@ exports.addNewOrder = function(req , res) {
 }
 
 exports.addNewOrderTable = function(req , res) {
+	console.log(req.body);
+	console.log(req.body.data);
 	var tableNumber = req.body.tableNumber;
 //	var restaurantId = req.body.restaurantId;
 	var accessToken=req.body.accessToken;
-	var callerId=req.body.callerId;
+	//var callerId=req.body.callerId;
 	var reqbody=req;
 //	var order = req.body;
 	var tableModel;
@@ -226,7 +229,7 @@ exports.addNewOrderTable = function(req , res) {
 		}
 
 		 tableModel=table;
-		return validateTableStatus(tableModel,callerId);		
+		return validateTableStatus(tableModel);		
 	}).then(function(response){
 		if(response.status=="free" ){
 			addOrder(reqbody,tableModel).then(function(order){
@@ -238,12 +241,6 @@ exports.addNewOrderTable = function(req , res) {
 			});
 			
 		}else if(response.status=="occupied" && response.callerID==callerId){
-			addOrder(reqbody,tableModel).then(function(order){
-				res.json(order);
-			});
-
-		}
-		else if(response.status=="occupied" && response.callerID!=callerId){
 			if(response.token==accessToken){
 				addOrder(reqbody,tableModel).then(function(order){
 				res.json(order);
@@ -253,9 +250,9 @@ exports.addNewOrderTable = function(req , res) {
 
 			}
 
-			// valdate token
 
 		}
+		
 
 	}).catch(function(err){
 		res.status(422).json({
