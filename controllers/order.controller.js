@@ -102,7 +102,7 @@ function addOrderItems(items){
 function validateTableStatus(tableModel){
 	var accessToken;
 	//var callerId=id;
-	console.log(id);
+	//console.log(id);
 	return new Promise(function(resolve,reject){
 		if(tableModel.status=="free"){
 			tableModel.getGroup().then(function(group){
@@ -214,13 +214,15 @@ exports.addNewOrder = function(req , res) {
 }
 
 exports.addNewOrderTable = function(req , res) {
-	console.log(req.body);
-	console.log(req.body.data);
-	var tableNumber = req.body.tableNumber;
+
+        
+         var body=JSON.parse(req.body.data);
+          console.log(body.tableNumber);
+	var tableNumber = body.tableNumber;
 //	var restaurantId = req.body.restaurantId;
-	var accessToken=req.body.accessToken;
+	var accessToken=body.accessToken;
 	//var callerId=req.body.callerId;
-	var reqbody=req;
+	var reqbody=body;
 //	var order = req.body;
 	var tableModel;
 	tableDB.findByTableNumber(tableNumber).then(function(table){
@@ -269,10 +271,10 @@ exports.addNewOrderTable = function(req , res) {
 	
 }
 
-function addOrder(req,table){
-	var userId = req.body.userId;
-	var restaurantId = req.body.restaurantId;
-	var order = req.body;
+function addOrder(body,table){
+
+	var restaurantId = body.restaurantId;
+	var order = body;
 	var userModel , orderItemModels , orderModel,restaurantModel,tableModel1;
 	tableModel1=table;
 	//console.log(tableModel);
