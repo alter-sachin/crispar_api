@@ -221,6 +221,9 @@ exports.addNewOrderTable = function(req , res) {
 //	var order = req.body;
 	var tableModel;
 	tableDB.findByTableNumber(tableNumber).then(function(table){
+		if(table==null){
+			throw "No table exist";
+		}
 
 		 tableModel=table;
 		return validateTableStatus(tableModel,callerId);		
@@ -257,9 +260,9 @@ exports.addNewOrderTable = function(req , res) {
 	}).catch(function(err){
 		res.status(422).json({
 			status : 1,
-			message : errorHandler.getErrorMessage(err)
+			message : err
 		});
-	});
+	})
 
 
 	
