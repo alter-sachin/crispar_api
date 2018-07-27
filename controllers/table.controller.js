@@ -37,6 +37,7 @@ exports.tableGroupToken = function(req , res) {
 	var tableObj = {};
 	
 	tableObj.table_number = req.params.tableNumber;	
+	var tableModel;
 	tableDB.findByTableNumber(tableObj.table_number).then(function(table){
 		if(table==null){
 			throw "No table exist";
