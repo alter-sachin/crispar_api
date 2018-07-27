@@ -32,3 +32,36 @@ exports.addNewTable = function(req , res) {
 
 	
 }
+
+exports.tableGroupToken = function(req , res) {
+	var tableObj = {};
+	
+	tableObj.table_number = req.params.tableNumber;	
+	tableDB.findByTableNumber(tableObj.table_number).then(function(table){
+		if(table==null){
+			throw "No table exist";
+		}
+
+		 tableModel=table;
+		return tableModel.getGroup();		
+	}).then(function(group){
+		var mainString=JSON.stringify(group);
+        var mainJson=JSON.parse(mainString);
+        res.json({
+			status:true,
+			token:mainJson.token
+		});
+
+
+
+	}).catch(function(err){
+		res.json({
+			status:false,
+			err:err
+		})
+
+			
+			})
+
+	
+}
