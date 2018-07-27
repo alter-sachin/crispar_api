@@ -11,11 +11,6 @@ module.exports = function(sequelize , DataTypes){
 		token:{
 			type: DataTypes.STRING,
 			allowNull : true
-		},
-		callerID:{
-			type: DataTypes.STRING,
-			allowNull : true
-
 		}
 		
 		
