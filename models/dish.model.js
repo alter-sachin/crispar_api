@@ -28,6 +28,14 @@ module.exports = function(sequelize , DataTypes){
 			type : DataTypes.STRING,
 			allowNull : false
 		},
+		imageLocation : {
+			type : DataTypes.STRING,
+			allowNull : false
+		},
+		steam : {
+			type : DataTypes.BOOLEAN,
+			allowNull : false
+		}
 
 	});
 

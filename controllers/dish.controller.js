@@ -160,6 +160,9 @@ exports.addNewDish = function(req , res) {
 	dishObj.description = req.body.description ;
 	dishObj.price = req.body.price;
 	dishObj.modelLocation = req.body.modelLocation;
+	dishObj.imageLocation = req.body.imageLocation;
+	dishObj.steam = req.body.steam;
+
 	dishObj.id = uuidv4();
 
 
@@ -363,7 +366,9 @@ exports.updateDish = function(req , res){
 	req.body.category ? ( updateObj.category  = req.body.category ): '';
 	req.body.description ? ( updateObj.description  = req.body.description ): '';
 	req.body.price ?( updateObj.price = req.body.price ): '';
-	req.body.modelLocation ?( updateObj.modelLocation = req.body.modelLocation ): '';
+	req.body.modelLocation ?( updateObj.modelLocation = req.body.modelLocation ): '';	
+	req.body.imageLocation ?( updateObj.imageLocation = req.body.imageLocation ): '';	
+	req.body.steam ?( updateObj.steam = req.body.steam ): '';
 
 	var dishModel;
 

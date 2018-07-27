@@ -26,6 +26,14 @@ module.exports = function(sequelize , DataTypes){
 		longitude : {
 			type : DataTypes.FLOAT,
 			allowNull : false
+		},
+		introModel:{
+			type : DataTypes.STRING,
+			allowNull : false
+		},
+		introImage:{
+			type : DataTypes.STRING,
+			allowNull : false
 		}
 
 	});

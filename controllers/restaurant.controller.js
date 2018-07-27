@@ -4,6 +4,9 @@ const Sequelize = require('sequelize');
 const errorHandler = require('../utils/error_handler');
 const _ = require('lodash');
 var restaurantDB = require('../db_calls/restaurant.db_call');
+const db = require('../config/lib/sequelize');
+const sequelize = db.sequelize;
+const Restaurant = db.models.Restaurant;
 const Op = Sequelize.Op;
 
 
@@ -22,6 +25,8 @@ exports.addNewRestaurant = function(req , res) {
 	restaurantObj.id = uuidv4();
 	restaurantObj.latitude = req.body.latitude;
 	restaurantObj.longitude = req.body.longitude;
+	restaurantObj.introModel = req.body.introModel;
+	restaurantObj.introImage = req.body.introImage;
 
 	restaurantDB.addNew(restaurantObj).then(function(data){
 		parsePhoneNumberString(data);
@@ -89,6 +94,8 @@ exports.updateRestaurant = function(req , res){
 	req.body.latitude ? ( updateObj.latitude  = req.body.latitude ): '';
 	req.body.longitude ? ( updateObj.longitude  = req.body.longitude ): '';
 	req.body.address ?( updateObj.address = req.body.address ): '';
+	req.body.introImage ?( updateObj.introImage = req.body.introImage ): '';
+	req.body.introModel ?( updateObj.introModel = req.body.introModel ): '';
 	req.body.phoneNumbers ? (updateObj.phoneNumbers = _.isArray(req.body.phoneNumbers) ? req.body.join(',') : req.body.phoneNumbers ): '';
 
 	restaurantDB.update(id , updateObj).then(function(restaurant){
@@ -187,6 +194,7 @@ function parseDishesByCategories(dishes){
 	var categoryArray ;
 	_.each(dishes , function(dish){
 		if(categoryObj[dish.category]){
+
 			categoryObj[dish.category].dishes.push(dish);
 		}else{
 			categoryObj[dish.category] = {};
@@ -218,6 +226,43 @@ exports.getMenuOfRestaurant = function(req , res){
 			restaurant : restaurantObj
 		});
 	}).catch(function(err){
+		res.status(422).json({
+			status : 1,
+			message : errorHandler.getErrorMessage(err)
+		});
+	});
+}
+
+exports.getMenuOfRestaurantAashish = function(req , res){
+	var id = req.params.restaurantID;
+	var restaurantModel;
+	var restaurantObj = {};
+	var restaurantMain={}
+     Restaurant.findById(id,{
+      include: [
+        {
+          model: db.models.Dish,
+          include: [
+            
+             db.models.Ingredient,db.models.Process,db.models.Flavour
+
+            
+          ]
+        }
+      ]
+    }).then(function(restaurant){
+    	restaurantMain=restaurant.toJSON();
+    	restaurantMain.dishes=null;
+    
+    	restaurantObj.categories = parseDishesByCategories(restaurant.dishes);
+    	_.extend(restaurantObj,restaurantMain);
+
+    	res.json({
+			status : 0,
+			restaurant : restaurantObj
+		});
+
+    }).catch(function(err){
 		res.status(422).json({
 			status : 1,
 			message : errorHandler.getErrorMessage(err)

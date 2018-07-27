@@ -14,6 +14,11 @@ module.exports = function(sequelize , DataTypes){
 		},
 		description: {
 			type: DataTypes.TEXT,
+		},
+		imageLocation:{
+			type: DataTypes.STRING,
+			allowNull : true
+
 		}
 	});
 
