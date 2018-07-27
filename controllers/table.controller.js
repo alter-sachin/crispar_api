@@ -66,3 +66,29 @@ exports.tableGroupToken = function(req , res) {
 
 	
 }
+
+exports.updateTableStatus=function(req,res){
+  var tableModel;
+	var status=req.body.status;
+	var tableNumber=req.body.tableNumber;
+	tableDB.findByTableNumber(tableNumber).then(function(table){
+		if(table==null){
+			throw "No table exist";
+		}
+		tableModel=table;
+		return tableModel.update({status:status})	
+	}).then(function(){
+      return tableModel.removeGroup();
+
+	}).then(function(){
+		res.json(tableModel.toJSON())
+	}).catch(function(err){
+		res.status(422).json({
+			status : 1,
+			message : errorHandler.getErrorMessage(err)
+		});
+
+
+	})
+
+}

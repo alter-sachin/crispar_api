@@ -7,5 +7,6 @@ module.exports = function(app){
 
 	app.route('/api/table').post(controller.addNewTable);
 	app.route('/api/table/:tableNumber/token').get(controller.tableGroupToken);
+	app.route('/api/table/update').post(controller.updateTableStatus);
 	
 }
