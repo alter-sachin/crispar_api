@@ -29,9 +29,9 @@ exports.addNew = function(userObj) {
 	});
 }
 
-exports.findByTableNumber = function(tableNumber) {
+exports.findByTableNumber = function(tableNumber,id) {
 	return new Promise(function(resolve,reject){
-		Table.findOne({ where: {table_number: tableNumber}}).then(function(table){
+		Table.findOne({ where: {table_number: tableNumber,restaurantId:id}}).then(function(table){
 			resolve(table);
 		}).catch(function(err){
 			reject(err);

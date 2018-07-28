@@ -7,6 +7,7 @@ module.exports = function(app){
 
 	app.route('/api/order/list').get(controller.getOrdersList);
 	app.route('/api/order').post(controller.addNewOrderTable);
+	//app.route('/api/order/new').post(controller.addOrderNew);
 
 	app.route('/api/order/:orderID').get(controller.getOrderByID);
 	app.route('/api/order/:orderID').delete(controller.deleteOrder);

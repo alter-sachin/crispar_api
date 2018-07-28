@@ -46,6 +46,7 @@ function initAssoiciateFunctions(models){
 			model.associate(models);
 		}
 	})
+	
 }
 
 

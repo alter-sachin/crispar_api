@@ -23,6 +23,7 @@ module.exports = function(sequelize , DataTypes){
 	Table.associate = function(models){
 		Table.hasMany(models.Order);
 		Table.hasOne(models.Group);
+		Table.belongsTo(models.Restaurant,{onDelete : 'CASCADE'});
 	}
 
 	return Table;

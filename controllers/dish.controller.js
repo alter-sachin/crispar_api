@@ -172,8 +172,6 @@ exports.addNewDish = function(req , res) {
 	var flavourObj = req.body.flavour;
 	var ingredients = req.body.ingredients;
 
-
-
 	findRestaurant(restaurantId).then(function(restaurant){
 		restaurantModel = restaurant;
 		return validateDishData(req.body);

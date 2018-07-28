@@ -219,11 +219,14 @@ exports.addNewOrderTable = function(req , res) {
 	var tableNumber = req.body.tableNumber;
 //	var restaurantId = req.body.restaurantId;
 	var accessToken=req.body.accessToken;
+
 	//var callerId=req.body.callerId;
 	var reqbody=req;
 //	var order = req.body;
 	var tableModel;
-	tableDB.findByTableNumber(tableNumber).then(function(table){
+
+
+	tableDB.findByTableNumber(tableNumber,req.body.restaurantId).then(function(table){
 		if(table==null){
 			throw "No table exist";
 		}
@@ -268,6 +271,8 @@ exports.addNewOrderTable = function(req , res) {
 
 	
 }
+
+
 
 function addOrder(req,table){
 	var userId = req.body.userId;
