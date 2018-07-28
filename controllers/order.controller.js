@@ -245,6 +245,7 @@ exports.addNewOrderTable = function(req , res) {
 		}else if(response.status=="occupied"){
 			if(response.token==accessToken){
 				addOrder(reqbody,tableModel).then(function(order){
+			    order.token=response.token;
 				res.json(order);
 			});
 			}else{
