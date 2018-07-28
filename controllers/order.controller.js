@@ -102,7 +102,7 @@ function addOrderItems(items){
 function validateTableStatus(tableModel){
 	var accessToken;
 	//var callerId=id;
-	console.log(id);
+	//console.log(id);
 	return new Promise(function(resolve,reject){
 		if(tableModel.status=="free"){
 			tableModel.getGroup().then(function(group){
@@ -214,19 +214,22 @@ exports.addNewOrder = function(req , res) {
 }
 
 exports.addNewOrderTable = function(req , res) {
-	console.log(req.body);
-	console.log(req.body.data);
-	var tableNumber = req.body.tableNumber;
+
+        
+         var body=JSON.parse(req.body.data);
+         // console.log(body.tableNumber);
+	var tableNumber = body.tableNumber;
 //	var restaurantId = req.body.restaurantId;
-	var accessToken=req.body.accessToken;
+
+	var accessToken=body.accessToken;
 
 	//var callerId=req.body.callerId;
-	var reqbody=req;
+	var reqbody=body;
 //	var order = req.body;
 	var tableModel;
 
 
-	tableDB.findByTableNumber(tableNumber,req.body.restaurantId).then(function(table){
+	tableDB.findByTableNumber(tableNumber,body.restaurantId).then(function(table){
 		if(table==null){
 			throw "No table exist";
 		}
@@ -243,13 +246,17 @@ exports.addNewOrderTable = function(req , res) {
 				
 			});
 			
-		}else if(response.status=="occupied" && response.callerID==callerId){
+		}else if(response.status=="occupied"){
 			if(response.token==accessToken){
 				addOrder(reqbody,tableModel).then(function(order){
+			    order.token=response.token;
 				res.json(order);
 			});
 			}else{
-				res.json("not validated");
+				res.json({
+			status : 1,
+			message : "Token not Validated"
+		      });
 
 			}
 
@@ -273,11 +280,11 @@ exports.addNewOrderTable = function(req , res) {
 }
 
 
+function addOrder(body,table){
 
-function addOrder(req,table){
-	var userId = req.body.userId;
-	var restaurantId = req.body.restaurantId;
-	var order = req.body;
+	var restaurantId = body.restaurantId;
+	var order = body;
+
 	var userModel , orderItemModels , orderModel,restaurantModel,tableModel1;
 	tableModel1=table;
 	//console.log(tableModel);
@@ -311,7 +318,7 @@ function addOrder(req,table){
 	}).catch(function(err){
 		var obj={
 			status : 1,
-			message : errorHandler.getErrorMessage(err)
+			message : "There is some error"
 		}
 		reject(obj);
 	});

@@ -85,6 +85,67 @@ exports.getTableStatus=function(req,res){
 		})
 	})
 
+}
+
+exports.tableGroupToken = function(req , res) {
+	var tableObj = {};
+	
+	tableObj.table_number = req.params.tableNumber;	
+	var tableModel;
+	tableDB.findByTableNumber(tableObj.table_number).then(function(table){
+		if(table==null){
+			throw "No table exist";
+		}
+
+		 tableModel=table;
+		return tableModel.getGroup();		
+	}).then(function(group){
+		var mainString=JSON.stringify(group);
+        var mainJson=JSON.parse(mainString);
+        res.json({
+			status:true,
+			token:mainJson.token
+		});
+
+
+
+	}).catch(function(err){
+		res.json({
+			status:false,
+			err:err
+		})
+
+			
+			})
+
+	
+}
+
+exports.updateTableStatus=function(req,res){
+  var tableModel;
+	var status=req.body.status;
+	var tableNumber=req.body.tableNumber;
+	var restaurantId=req.body.restaurantId;
+	tableDB.findByTableNumber(tableNumber,restaurantId).then(function(table){
+		if(table==null){
+			throw "No table exist";
+		}
+		tableModel=table;
+		return tableModel.update({status:status})	
+	}).then(function(){
+      return tableModel.getGroup();
+	}).then(function(group){
+		return group.destroy({ force: true });	
+	}).then(function(){
+		res.json(tableModel.toJSON())
+	}).catch(function(err){
+		res.status(422).json({
+			status : 1,
+			message : errorHandler.getErrorMessage(err)
+		});
+
+
+	})
 
 
 }
