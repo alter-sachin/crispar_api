@@ -3,6 +3,7 @@ const uuidv4 = require('uuid/v4');
 const errorHandler = require('../utils/error_handler');
 const _ = require('lodash');
 var userDB = require('../db_calls/user.db_call');
+var restaurantDB = require('../db_calls/restaurant.db_call');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
@@ -12,9 +13,8 @@ const Op = Sequelize.Op;
 /* add new user*/
 exports.addNewUser = function(req , res) {
 	var userObj = {};
-	userObj.name  = req.body.name ;
-	userObj.address = req.body.address;
-	userObj.facebookID = req.body.facebookID;
+	userObj.username  = req.body.username ;
+	userObj.password = req.body.password;
 	userObj.id = uuidv4();
 
 	userDB.addNew(userObj).then(function(data){
@@ -32,6 +32,80 @@ exports.addNewUser = function(req , res) {
 
 	
 }
+
+exports.updateUserWithRestaurant=function(req,res){
+
+	var userId=req.body.userId;
+	var restaurantId=req.body.restaurantId;
+	var userModel;
+	var restaurantModel;
+
+	userDB.getByID(userId).then(function(user){
+		userModel=user;
+
+		return restaurantDB.getByID(restaurantId);
+	}).then(function(restaurant){
+		restaurantModel=restaurant;
+		return restaurantModel.setUser(userModel);
+
+
+
+	}).then(function(restaurantAfter){
+		res.json({status : 0,
+			restaurant : restaurantAfter,
+			message : 'user updated successfully'
+
+		})
+	}).catch(function(err){
+		res.status(422).json({
+			status : 1,
+			message : errorHandler.getErrorMessage(err)
+		});
+
+	})
+
+
+
+
+}
+
+exports.verifyAdmin=function(req,res){
+    var userObj={};
+
+
+	userObj.username=req.params.username;
+	userObj.password=req.params.password;
+	var userModel;
+	var restaurantModel;
+
+	userDB.getByUsername(userObj).then(function(user){
+		userModel=user;
+		var userNewObj=userModel.toJSON();
+
+
+		return restaurantDB.getByUserId(userNewObj.id);
+	}).then(function(restaurantAfter){
+		res.json({status : 0,
+			restaurant : restaurantAfter,
+			message : 'user updated successfully'
+
+		})
+	}).catch(function(err){
+		res.status(422).json({
+			status : 1,
+			message : errorHandler.getErrorMessage(err)
+		});
+
+	})
+
+
+
+
+}
+
+
+
+
 
 /* get user by id */
 exports.getUserByID = function(req , res){

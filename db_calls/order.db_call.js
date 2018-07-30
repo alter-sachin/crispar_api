@@ -43,9 +43,21 @@ exports.getByIDCompleteDetails = function(id){
  
 	return new Promise(function(resolve,reject){
 		
-		Order.findById(id,{
-			include : [OrderItem]
-		}).then(function(order){
+		Order.findById(id,
+			{
+          include: [
+        {
+          model: db.models.OrderItem,
+          include: [
+            
+             db.models.Dish
+
+            
+          ]
+        }
+      ]
+        }
+		).then(function(order){
 			if(!order){
 				return reject(new Error('No order found for id'));
 			}

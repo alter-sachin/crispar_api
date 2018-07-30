@@ -216,7 +216,8 @@ exports.addNewOrder = function(req , res) {
 exports.addNewOrderTable = function(req , res) {
 
         
-         var body=JSON.parse(req.body.data);
+       //  var body=JSON.parse(req.body.data);
+       var body=req.body;
          // console.log(body.tableNumber);
 	var tableNumber = body.tableNumber;
 //	var restaurantId = req.body.restaurantId;
