@@ -55,7 +55,7 @@ exports.getByUserId = function(id){
 			}
 			resolve(restaurant);
 		}).catch(function(err){
-			reject(err);
+			reject(err);	
 		});
 	});
 }

@@ -170,7 +170,8 @@ exports.getOrdersOfRestaurant = function(req , res){
 
             
           ]
-        }]
+        },{model: db.models.Table}
+        ]
 	}
 	
 	restaurantDB.getByID(id).then(function(restaurant){
