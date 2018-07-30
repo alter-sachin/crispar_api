@@ -42,6 +42,7 @@ module.exports = function(sequelize , DataTypes){
 		Restaurant.hasMany(models.Dish);
 		Restaurant.hasMany(models.Order);
 		Restaurant.hasMany(models.Table);
+		Restaurant.belongsTo(models.User);
 	}
 
 	return Restaurant;

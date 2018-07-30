@@ -46,6 +46,20 @@ exports.getByID = function(id){
 	});
 }
 
+exports.getByUserId = function(id){
+ 
+	return new Promise(function(resolve , reject ){
+		Restaurant.findOne({where:{userId:id}}).then(function(restaurant){
+			if(!restaurant){
+				return reject(new Error('No restaurant found for user id'));
+			}
+			resolve(restaurant);
+		}).catch(function(err){
+			reject(err);
+		});
+	});
+}
+
 
 /* delete by id */
 exports.deleteByID = function(id){

@@ -8,14 +8,11 @@ module.exports = function(sequelize , DataTypes){
 			type : DataTypes.UUID,
 			primaryKey : true
 		},
-		name : {
+		username : {
 			type: DataTypes.STRING,
 			allowNull : false
 		},
-		facebookID : {
-			type : DataTypes.STRING
-		},
-		address : {
+		password : {
 			type : DataTypes.STRING
 		}
 
@@ -24,7 +21,7 @@ module.exports = function(sequelize , DataTypes){
 	});
 
 	User.associate = function(models){
-		User.hasMany(models.Order);
+		
 	}
 
 	return User;

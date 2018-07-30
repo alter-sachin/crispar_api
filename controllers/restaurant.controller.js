@@ -19,6 +19,7 @@ function parsePhoneNumberString(restaurant){
 /* add new restaurant*/
 exports.addNewRestaurant = function(req , res) {
 	var restaurantObj = {};
+	console.log(req.body);
 	restaurantObj.name  = req.body.name ;
 	restaurantObj.address = req.body.address;
 	restaurantObj.phoneNumbers = req.body.phoneNumbers && _.isArray(req.body.phoneNumbers) ? req.body.phoneNumbers.join(',') : req.body.phoneNumbers;
@@ -159,7 +160,17 @@ exports.getOrdersOfRestaurant = function(req , res){
 		},
 		order : [
 			[sortBy , order]
-		]
+		],
+		include: [
+        {
+          model: db.models.OrderItem,
+          include: [
+            
+             db.models.Dish
+
+            
+          ]
+        }]
 	}
 	
 	restaurantDB.getByID(id).then(function(restaurant){

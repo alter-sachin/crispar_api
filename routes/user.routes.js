@@ -7,6 +7,8 @@ module.exports = function(app){
 	//app.route('/api/table').post(controller.addNewTable);
 
 	app.route('/api/user').post(controller.addNewUser);
+	app.route('/api/user/updateWithRestaurant').post(controller.updateUserWithRestaurant);
+	app.route('/api/user/verifyAdmin/:username/:password').get(controller.verifyAdmin);
 	app.route('/api/user/list').get(controller.getUsersList);
 
 	app.route('/api/user/:userID').get(controller.getUserByID);
