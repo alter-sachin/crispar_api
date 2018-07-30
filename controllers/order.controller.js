@@ -218,6 +218,7 @@ exports.addNewOrderTable = function(req , res) {
         
          var body=JSON.parse(req.body.data);
          // console.log(body.tableNumber);
+          console.log(body);
 	var tableNumber = body.tableNumber;
 //	var restaurantId = req.body.restaurantId;
 
