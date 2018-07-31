@@ -32,6 +32,9 @@ exports.addNew = function(userObj) {
 exports.getByUsername = function(userObj) {
 	return new Promise(function(resolve,reject){
 		User.findOne({where:{ username:userObj.username,password:userObj.password}}).then(function(user){
+			if(!user){
+				return reject(new Error('No user found '))
+			}
 			resolve(user);
 		}).catch(function(err){
 			reject(err);
