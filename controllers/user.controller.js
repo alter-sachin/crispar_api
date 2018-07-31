@@ -81,15 +81,10 @@ exports.verifyAdmin=function(req,res){
 	userDB.getByUsername(userObj).then(function(user){
 		userModel=user;
 		var userNewObj=userModel.toJSON();
-
-
-		return restaurantDB.getByUserId(userNewObj.id);
-	}).then(function(restaurantAfter){
-		res.json({status : 0,
-			restaurant : restaurantAfter,
-			message : 'user updated successfully'
-
-		})
+          res.json({
+			status : 1,
+			user :userNewObj
+		});
 	}).catch(function(err){
 		res.status(422).json({
 			status : 1,
