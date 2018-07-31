@@ -82,7 +82,7 @@ exports.verifyAdmin=function(req,res){
 		userModel=user;
 		var userNewObj=userModel.toJSON();
           res.json({
-			status : 1,
+			status : 0,
 			user :userNewObj
 		});
 	}).catch(function(err){
