@@ -12,7 +12,8 @@ module.exports = function(app){
 	app.route('/api/restaurant/:restaurantID').delete(controller.deleteRestaurant);
 	app.route('/api/restaurant/:restaurantID').put(controller.updateRestaurant);
 
-	app.route('/api/restaurant/:restaurantID/orders').get(controller.getOrdersOfRestaurant);
+	app.route('/api/restaurant/:userId/orders').get(controller.getOrdersOfRestaurant);
+	app.route('/api/restaurant/:userId/tables').get(controller.getTablesOfRestaurant);
 	app.route('/api/restaurant/:restaurantID/menu').get(controller.getMenuOfRestaurantAashish);
 
 	app.route('/api/search/restaurant/location').get(controller.locationSearch);

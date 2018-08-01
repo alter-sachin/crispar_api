@@ -143,7 +143,7 @@ exports.getRestaurantsList = function(req , res){
 
 /*get list of orders of a particluar restaurant*/
 exports.getOrdersOfRestaurant = function(req , res){
-	var id = req.params.restaurantID;
+	var id = req.params.userId;
 	var status = req.query.status ? req.query.status : '%%' ;
 	var sortBy = req.query.sortBy ? req.query.sortBy : 'createdAt';
 	var order = req.query.order ? req.query.order : 'DESC';
@@ -174,12 +174,48 @@ exports.getOrdersOfRestaurant = function(req , res){
         ]
 	}
 	
-	restaurantDB.getByID(id).then(function(restaurant){
+	restaurantDB.getByUserId(id).then(function(restaurant){
 		return restaurant.getOrders(query);
 	}).then(function(orderModels){
 		res.json({
 			status : 0,
 			orders : orderModels
+		});
+	}).catch(function(err){
+		res.status(422).json({
+			status : 1,
+			message : errorHandler.getErrorMessage(err)
+		});
+	});
+}
+
+exports.getTablesOfRestaurant = function(req , res){
+	var id = req.params.userId;
+	var status = req.query.status ? req.query.status : '%%' ;
+	var sortBy = req.query.sortBy ? req.query.sortBy : 'createdAt';
+	var order = req.query.order ? req.query.order : 'DESC';
+	var start = req.query.start ? _.toNumber(req.query.start) : 0;
+	var limit = req.query.limit ? _.toNumber(req.query.limit) : 250;
+
+
+
+	
+	
+
+	var query = {
+		include: [
+        {
+          model: db.models.Order
+        }
+        ]
+	}
+	
+	restaurantDB.getByUserId(id).then(function(restaurant){
+		return restaurant.getTables(query);
+	}).then(function(tableModels){
+		res.json({
+			status : 0,
+			tables : tableModels
 		});
 	}).catch(function(err){
 		res.status(422).json({
