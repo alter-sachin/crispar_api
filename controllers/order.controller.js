@@ -154,7 +154,7 @@ function validateTableStatus(tableModel){
 				
 				responseJson.status="occupied";
 				responseJson.token=mainJson.token;
-		
+
 
 				resolve(responseJson);
 			}).catch(function(err){
@@ -215,70 +215,71 @@ exports.addNewOrder = function(req , res) {
 
 exports.addNewOrderTable = function(req , res) {
 
-        
-       //  var body=JSON.parse(req.body.data);
-       var body=req.body;
+
+        var body=JSON.parse(req.body.data);
+      // var body=req.body;
          // console.log(body.tableNumber);
-          console.log(body);
+
 	var tableNumber = body.tableNumber;
+
 //	var restaurantId = req.body.restaurantId;
 
-	var accessToken=body.accessToken;
+         var accessToken=body.accessToken;
 
 	//var callerId=req.body.callerId;
 	var reqbody=body;
 //	var order = req.body;
-	var tableModel;
+var tableModel;
 
 
-	tableDB.findByTableNumber(tableNumber,body.restaurantId).then(function(table){
-		if(table==null){
-			throw "No table exist";
-		}
+tableDB.findByTableNumber(tableNumber,body.restaurantId).then(function(table){
+	if(table==null){
+		throw "No table exist";
+	}
 
-		 tableModel=table;
-		return validateTableStatus(tableModel);		
-	}).then(function(response){
-		if(response.status=="free" ){
-			addOrder(reqbody,tableModel).then(function(order){
-				tableModel.update({status:"occupied"}).then(() => {
+	tableModel=table;
+	return validateTableStatus(tableModel);		
+}).then(function(response){
+	if(response.status=="free" ){
+		addOrder(reqbody,tableModel).then(function(order){
+			tableModel.update({status:"occupied"}).then(() => {
 				order.token=response.token;
 				res.json(order);
-				})
-				
-			});
-			
-		}else if(response.status=="occupied"){
-			if(response.token==accessToken){
-				addOrder(reqbody,tableModel).then(function(order){
-			    order.token=response.token;
+			})
+
+		});
+
+	}else if(response.status=="occupied"){
+		if(response.token==accessToken){
+			addOrder(reqbody,tableModel).then(function(order){
+				order.token=response.token;
 				res.json(order);
 			});
-			}else{
-				res.json({
-			status : 1,
-			message : "Token not Validated"
-		      });
-
-			}
-
+		}else{
+			res.json({
+				status : 1,
+				message : "Token not Validated"
+			});
 
 		}
-		
-
-	}).catch(function(err){
-		res.status(422).json({
-			status : 1,
-			message : err
-		});
-	})
 
 
-	
+	}
 
-	
 
-	
+}).catch(function(err){
+	res.status(422).json({
+		status : 1,
+		message : err
+	});
+})
+
+
+
+
+
+
+
 }
 
 
@@ -292,39 +293,39 @@ function addOrder(body,table){
 	//console.log(tableModel);
 	return new Promise(function(resolve,reject){
 
-	 restaurantDB.getByID(restaurantId).then(function(restaurant){
-		restaurantModel = restaurant;
-		return validateOrderData(order);
-	}).then(function(){
-		return addOrderItems(order.items);
-	}).then(function(orderItems){
-		orderItemModels = orderItems;
-		return orderDB.addNew(order);
-	}).then(function(order){
-		orderModel = order;
-		return orderModel.setTable(tableModel1);
-	}).then(function(){
-		return orderModel.setRestaurant(restaurantModel);
-	}).then(function(){
-		return orderModel.setOrderItems(orderItemModels);
-	}).then(function(orderModel){
-		console.log("here");
-	
-		var obj={
-			status : 0,
-			message : "order added successfully",
-			order : orderModel
-		}
-		
-		resolve(obj);
-	}).catch(function(err){
-		var obj={
-			status : 1,
-			message : "There is some error"
-		}
-		reject(obj);
-	});
-})
+		restaurantDB.getByID(restaurantId).then(function(restaurant){
+			restaurantModel = restaurant;
+			return validateOrderData(order);
+		}).then(function(){
+			return addOrderItems(order.items);
+		}).then(function(orderItems){
+			orderItemModels = orderItems;
+			return orderDB.addNew(order);
+		}).then(function(order){
+			orderModel = order;
+			return orderModel.setTable(tableModel1);
+		}).then(function(){
+			return orderModel.setRestaurant(restaurantModel);
+		}).then(function(){
+			return orderModel.setOrderItems(orderItemModels);
+		}).then(function(orderModel){
+			console.log("here");
+
+			var obj={
+				status : 0,
+				message : "order added successfully",
+				order : orderModel
+			}
+
+			resolve(obj);
+		}).catch(function(err){
+			var obj={
+				status : 1,
+				message : "There is some error"
+			}
+			reject(obj);
+		});
+	})
 }
 
 
