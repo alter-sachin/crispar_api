@@ -127,20 +127,16 @@ function validateTableStatus(tableModel){
 					});
 
 				}else{
-					var mainString=JSON.stringify(group);
-					var mainJson=JSON.parse(mainString);
-					var responseJson={};
-					
-					responseJson.status="free";
+					var randomNumber=Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000;
+					group.update({token:randomNumber.toString()}).then(() => {
+						var responseJson={};
+						responseJson.status="free";
+						responseJson.token=randomNumber.toString();
+						resolve(responseJson);
+					})
 
-					responseJson.token=mainJson.token;
-
-
-					console.log(mainJson.token);
 
 					
-					
-					resolve(responseJson);
 
 				}
 			}).catch(function(err){
@@ -216,15 +212,15 @@ exports.addNewOrder = function(req , res) {
 exports.addNewOrderTable = function(req , res) {
 
 
-        var body=JSON.parse(req.body.data);
+	var body=JSON.parse(req.body.data);
       // var body=req.body;
          // console.log(body.tableNumber);
 
-	var tableNumber = body.tableNumber;
+         var tableNumber = body.tableNumber;
 
 //	var restaurantId = req.body.restaurantId;
 
-         var accessToken=body.accessToken;
+var accessToken=body.accessToken;
 
 	//var callerId=req.body.callerId;
 	var reqbody=body;
