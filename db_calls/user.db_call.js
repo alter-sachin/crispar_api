@@ -78,6 +78,19 @@ exports.getByUsername = function(userObj) {
 	});
 }
 
+exports.getByUserFacebookId = function(id) {
+	return new Promise(function(resolve,reject){
+		User.findOne({where:{facebookId:id}}).then(function(user){
+			if(!user){
+				return reject(new Error('No user found '))
+			}
+			resolve(user);
+		}).catch(function(err){
+			reject(err);
+		});
+	});
+}
+
 
 
 /*find by id*/

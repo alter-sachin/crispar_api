@@ -283,13 +283,13 @@ function addOrder(body,table){
 
 	var restaurantId = body.restaurantId;
 	var order = body;
-	var userId = body.userId;
+	var userId = body.facebookId;
 
 	var userModel , orderItemModels , orderModel,restaurantModel,tableModel1;
 	tableModel1=table;
 	//console.log(tableModel);
 	return new Promise(function(resolve,reject){
-		userDB.getByID(userId).then(function(user){
+		userDB.getByUserFacebookId(userId).then(function(user){
 		userModel = user;
 		return restaurantDB.getByID(restaurantId);
 	    }).then(function(restaurant){
