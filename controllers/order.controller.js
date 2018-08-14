@@ -210,22 +210,22 @@ exports.addNewOrder = function(req , res) {
 }
 
 exports.addNewOrderTable = function(req , res) {
+		console.log("body");
+	var body={}
+	if(req.body.data){
+		body=JSON.parse(req.body.data);
+
+	}else{
+		body=req.body;
+
+	}
 
 
-	var body=JSON.parse(req.body.data);
-      // var body=req.body;
-         // console.log(body.tableNumber);
 
-         var tableNumber = body.tableNumber;
-
-//	var restaurantId = req.body.restaurantId;
-
-var accessToken=body.accessToken;
-
-	//var callerId=req.body.callerId;
-	var reqbody=body;
-//	var order = req.body;
-var tableModel;
+    var tableNumber = body.tableNumber;
+    var accessToken=body.accessToken;
+     var reqbody=body;
+     var tableModel;
 
 
 tableDB.findByTableNumber(tableNumber,body.restaurantId).then(function(table){
@@ -283,13 +283,16 @@ function addOrder(body,table){
 
 	var restaurantId = body.restaurantId;
 	var order = body;
+	var userId = body.userId;
 
 	var userModel , orderItemModels , orderModel,restaurantModel,tableModel1;
 	tableModel1=table;
 	//console.log(tableModel);
 	return new Promise(function(resolve,reject){
-
-		restaurantDB.getByID(restaurantId).then(function(restaurant){
+		userDB.getByID(userId).then(function(user){
+		userModel = user;
+		return restaurantDB.getByID(restaurantId);
+	    }).then(function(restaurant){
 			restaurantModel = restaurant;
 			return validateOrderData(order);
 		}).then(function(){
@@ -302,6 +305,8 @@ function addOrder(body,table){
 			return orderModel.setTable(tableModel1);
 		}).then(function(){
 			return orderModel.setRestaurant(restaurantModel);
+		}).then(function(){
+			return orderModel.setUser(userModel);
 		}).then(function(){
 			return orderModel.setOrderItems(orderItemModels);
 		}).then(function(orderModel){

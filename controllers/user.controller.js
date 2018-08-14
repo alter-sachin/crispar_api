@@ -10,11 +10,30 @@ const Op = Sequelize.Op;
 
 
 
+function isString (value) {
+return typeof value === 'string' || value instanceof String;
+}
 /* add new user*/
 exports.addNewUser = function(req , res) {
+	var newBody={}
+	if(req.body.data){
+		newBody=JSON.parse(req.body.data);
+
+	}else{
+		newBody=req.body;
+
+	}
+
 	var userObj = {};
-	userObj.username  = req.body.username ;
-	userObj.password = req.body.password;
+
+
+	userObj.username  = newBody.username?newBody.username:"" ;
+	userObj.password = newBody.password ? newBody.password :"";
+	userObj.role=newBody.role ? newBody.role : "user" ;
+	userObj.name=newBody.name ? newBody.name : "" ;
+	userObj.email=newBody.email ? newBody.email : "" ;
+	userObj.facebookId=newBody.facebookId ? newBody.facebookId : "";
+
 	userObj.id = uuidv4();
 
 	userDB.addNew(userObj).then(function(data){

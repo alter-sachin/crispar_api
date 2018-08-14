@@ -1,6 +1,5 @@
 module.exports = {
 	db:{
-		connectionLimit : 100;
 		host : process.env.dbHost || 'localhost',
 		user : process.env.dbUser || 'root',
 		password: process.env.dbPassword || '',

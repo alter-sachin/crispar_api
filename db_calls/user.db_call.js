@@ -21,11 +21,47 @@ function findUserByID(id){
 /*add new user row*/
 exports.addNew = function(userObj) {
 	return new Promise(function(resolve,reject){
-		User.create(userObj).then(function(user){
+		if(userObj.role=="user"){
+			User.findOne({where:{facebookId:userObj.facebookId}}).then(function(user){
+				if(user==null){
+					return User.create(userObj);
+				}else{
+					resolve(user);
+				}
+			}).then(function(user){
+				resolve(user);
+
+
+			}).catch(function(err){
+				reject(err);
+
+			})
+		}
+		else if(userObj.role=="admin"){
+			User.findOne({where:{username:userObj.username}}).then(function(user){
+				if(user==null){
+					return User.create(userObj);
+				}else{
+					resolve(user);
+				}
+			}).then(function(user){
+				resolve(user);
+
+
+			}).catch(function(err){
+				reject(err);
+
+			})
+
+
+		}
+
+	/*	User.create(userObj).then(function(user){
 			resolve(user);
 		}).catch(function(err){
 			reject(err);
 		});
+		*/
 	});
 }
 
@@ -46,7 +82,7 @@ exports.getByUsername = function(userObj) {
 
 /*find by id*/
 exports.getByID = function(id){
- 
+
 	return new Promise(function(resolve,reject){
 		
 		findUserByID(id).then(function(user){
@@ -96,7 +132,7 @@ exports.getList = function(params){
 		offset : params.start,
 		limit : params.limit,
 		order  : [
-			[params.sortBy , params.order]
+		[params.sortBy , params.order]
 		]
 	}
 	return new Promise(function(resolve,reject){

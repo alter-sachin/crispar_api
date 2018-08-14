@@ -11,6 +11,7 @@ module.exports.start = function() {
 	sequelize.sync().then(function(){
 
 		var User = sequelizeDB.models.User;
+		
 
 
 		var app = express.init();
