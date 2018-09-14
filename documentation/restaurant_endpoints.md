@@ -8,11 +8,13 @@ API to add new restaurant.
 
 ```javascript
     {   
-    "name" : "afsfsf",(String - required)
-    "address" : "asdasdewwesa"(String - required),
-    "phoneNumbers" : ["545344"](Array of strings - required),
-    "latitude" : 155645(Float Number - required),
-    "longitude": 546432(Float Number - required)
+    "name" : "La Waffle",
+    "address" : "Z - 9, Metro Pillar No. 421, Block J, Rajouri Garden Extension, Rajouri Garden, New Delhi, Delhi 110027",
+    "phoneNumbers" : ["096969 67050"],
+    "latitude" : 28.5469,
+    "longitude": 77.1858,
+    "introModel":"102/102",
+    "introImage":"pictures/la_waffle"
 }
 ```
 
