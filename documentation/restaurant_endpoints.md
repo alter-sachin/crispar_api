@@ -3,7 +3,7 @@
 ### POST @*/api/restaurant*
 
 API to add new restaurant.
-
+request body type should be application/json
 #### Request
 
 ```javascript
